@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Dependency Inversion Principle (DIP) Data Flow",
+    "output": "low level design/02_design_principles/dip/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "High-Level Module"
+    },
+    {
+      "label": "Abstraction Boundary"
+    },
+    {
+      "label": "Low-Level Implementations"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "notify",
+      "type": "frontend",
+      "label": "OrderNotifier",
+      "sublabel": "High-level service",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "msg_svc",
+      "type": "backend",
+      "label": "MessageService",
+      "sublabel": "send(to, msg) contract",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sms",
+      "type": "external",
+      "label": "TwilioSMSClient",
+      "sublabel": "Low-level concretion",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "sendgrid",
+      "type": "external",
+      "label": "SendGridEmailClient",
+      "sublabel": "Low-level concretion",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "notify",
+      "to": "msg_svc",
+      "label": "interface"
+    },
+    {
+      "from": "msg_svc",
+      "to": "sms",
+      "label": "inverts to"
+    },
+    {
+      "from": "msg_svc",
+      "to": "sendgrid",
+      "label": "inverts to"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Inverted Dependency Direction",
+      "items": [
+        "High-level modules must not depend on low-level modules; both depend on abstractions",
+        "Abstractions must not depend on details; details depend on abstractions",
+        "Enables pluggable infrastructure without touching business logic"
+      ]
+    }
+  ]
+}

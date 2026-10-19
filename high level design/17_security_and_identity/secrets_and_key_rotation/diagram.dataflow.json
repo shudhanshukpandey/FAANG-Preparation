@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Secrets Management & Automated Key Rotation Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Microservice"
+    },
+    {
+      "label": "Vault KMS"
+    },
+    {
+      "label": "Key Ring (V1/V2)"
+    },
+    {
+      "label": "Target Database"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "svc",
+      "type": "frontend",
+      "label": "Billing Service",
+      "sublabel": "Get DB Lease",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "vault",
+      "type": "security",
+      "label": "HashiCorp Vault",
+      "sublabel": "Dynamic credential generator",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "keys",
+      "type": "backend",
+      "label": "Key Ring Store",
+      "sublabel": "V1 & V2 Active",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "RDS Postgres",
+      "sublabel": "TTL 1hr credentials",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "svc",
+      "to": "vault",
+      "label": "auth req"
+    },
+    {
+      "from": "vault",
+      "to": "keys",
+      "label": "get active key"
+    },
+    {
+      "from": "keys",
+      "to": "db",
+      "label": "issue lease"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zero Hardcoded Credentials",
+      "items": [
+        "Secrets injected into memory via env or sidecar volume",
+        "Dynamic leasing limits blast radius of stolen credentials",
+        "Automated rotation fulfills SOC2 and PCI-DSS compliance"
+      ]
+    }
+  ]
+}

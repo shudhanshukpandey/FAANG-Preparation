@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Notification Factory Method Data Flow",
+    "output": "low level design/04_creational_patterns/factory_method/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Caller"
+    },
+    {
+      "label": "Creator"
+    },
+    {
+      "label": "Factory Method"
+    },
+    {
+      "label": "Channel Gateway"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Notification App",
+      "sublabel": "notify(user, msg)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "creator",
+      "type": "backend",
+      "label": "Abstract Creator",
+      "sublabel": "defines workflow",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "email_c",
+      "type": "backend",
+      "label": "Email Creator",
+      "sublabel": "creates Email",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "sms_c",
+      "type": "backend",
+      "label": "SMS Creator",
+      "sublabel": "creates SMS",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "smtp",
+      "type": "external",
+      "label": "SMTP Service",
+      "sublabel": "Email delivery",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "twilio",
+      "type": "external",
+      "label": "Twilio SMS API",
+      "sublabel": "SMS delivery",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "creator",
+      "label": "trigger"
+    },
+    {
+      "from": "creator",
+      "to": "email_c",
+      "label": "subclass 1"
+    },
+    {
+      "from": "creator",
+      "to": "sms_c",
+      "label": "subclass 2"
+    },
+    {
+      "from": "email_c",
+      "to": "smtp",
+      "label": "deliver"
+    },
+    {
+      "from": "sms_c",
+      "to": "twilio",
+      "label": "deliver"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Extensible Creation",
+      "items": [
+        "Creator defines core workflow",
+        "Subclasses decide concrete product",
+        "Closed for modification, open for extension"
+      ]
+    }
+  ]
+}

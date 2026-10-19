@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Cache Stampede (XFetch) & Warming Data Flow",
+    "output": "high level design/06_caching_strategies/cache_stampede_and_warming/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Burst Requests"
+    },
+    {
+      "label": "Stampede Gate"
+    },
+    {
+      "label": "XFetch Worker"
+    },
+    {
+      "label": "Database Engine"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "burst",
+      "type": "frontend",
+      "label": "10,000 Callers",
+      "sublabel": "Key expiring now",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "gate",
+      "type": "security",
+      "label": "Mutex Lock",
+      "sublabel": "1 query allowed",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "xfetch",
+      "type": "backend",
+      "label": "XFetch Refresh",
+      "sublabel": "Early background refresh",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Database Engine",
+      "sublabel": "Protected from crash",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "burst",
+      "to": "gate",
+      "label": "stampede"
+    },
+    {
+      "from": "gate",
+      "to": "xfetch",
+      "label": "acquire lock"
+    },
+    {
+      "from": "xfetch",
+      "to": "db",
+      "label": "single query"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Thundering Herd Shield",
+      "items": [
+        "Mutex lock serializes cache misses to DB",
+        "XFetch pre-emptively refreshes hot keys before TTL",
+        "Protects relational databases from instant collapse"
+      ]
+    }
+  ]
+}

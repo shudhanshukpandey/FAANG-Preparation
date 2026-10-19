@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "LRU Cache O(1) Data Flow",
+    "output": "low level design/09_classic_machine_coding/lru_cache/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Cache Client"
+    },
+    {
+      "label": "Hash Map Lookup"
+    },
+    {
+      "label": "Doubly Linked List"
+    },
+    {
+      "label": "Eviction"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Cache Client",
+      "sublabel": "get(K) / put(K, V)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "map",
+      "type": "database",
+      "label": "Hash Map",
+      "sublabel": "O(1) Key to Node",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "head",
+      "type": "backend",
+      "label": "Head (MRU)",
+      "sublabel": "Most Recently Used",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "tail",
+      "type": "backend",
+      "label": "Tail (LRU)",
+      "sublabel": "Least Recently Used",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "evict",
+      "type": "security",
+      "label": "Evict Tail Node",
+      "sublabel": "Capacity exceeded",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "map",
+      "label": "lookup in O(1)"
+    },
+    {
+      "from": "map",
+      "to": "head",
+      "label": "mark MRU"
+    },
+    {
+      "from": "map",
+      "to": "tail",
+      "label": "insert new"
+    },
+    {
+      "from": "tail",
+      "to": "evict",
+      "label": "evict LRU"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "O(1) Data Structure Hybrid",
+      "items": [
+        "Hash map provides instant O(1) access",
+        "Doubly linked list allows O(1) removal & head insertion",
+        "Sentinel dummy nodes simplify pointer manipulation"
+      ]
+    }
+  ]
+}

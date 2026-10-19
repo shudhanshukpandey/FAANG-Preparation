@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "HAS-A Weak Aggregation Data Flow",
+    "output": "low level design/01_oop_fundamentals/aggregation/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Department"
+    },
+    {
+      "label": "Weak Reference"
+    },
+    {
+      "label": "Professor Member"
+    },
+    {
+      "label": "Research Output"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "dept",
+      "type": "frontend",
+      "label": "ComputerScience",
+      "sublabel": "Department Container",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "ref",
+      "type": "backend",
+      "label": "professors[] list",
+      "sublabel": "Holds reference pointer",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "prof",
+      "type": "backend",
+      "label": "Prof. Smith",
+      "sublabel": "Independent object",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "career",
+      "type": "database",
+      "label": "Research Output",
+      "sublabel": "Survives Dept Deletion",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "dept",
+      "to": "ref",
+      "label": "contains"
+    },
+    {
+      "from": "ref",
+      "to": "prof",
+      "label": "references"
+    },
+    {
+      "from": "prof",
+      "to": "career",
+      "label": "publishes"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Weak Ownership (HAS-A)",
+      "items": [
+        "Container references child objects created elsewhere",
+        "Child lifecycle is independent of the container",
+        "Deleting Department does NOT destroy Professor"
+      ]
+    }
+  ]
+}

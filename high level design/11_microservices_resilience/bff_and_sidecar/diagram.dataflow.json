@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Backend for Frontend (BFF) & Sidecar Proxy Data Flow",
+    "output": "high level design/11_microservices_resilience/bff_and_sidecar/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Mobile App"
+    },
+    {
+      "label": "Mobile BFF"
+    },
+    {
+      "label": "Sidecar Proxy"
+    },
+    {
+      "label": "Microservices"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "iOS Mobile App",
+      "sublabel": "Single API request",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "bff",
+      "type": "backend",
+      "label": "Mobile BFF",
+      "sublabel": "Aggregates microservices",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "envoy",
+      "type": "security",
+      "label": "Envoy Sidecar",
+      "sublabel": "mTLS & Tracing",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "svc",
+      "type": "database",
+      "label": "Core Microservice",
+      "sublabel": "Business Logic",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "app",
+      "to": "bff",
+      "label": "mobile call"
+    },
+    {
+      "from": "bff",
+      "to": "envoy",
+      "label": "outbound rpc"
+    },
+    {
+      "from": "envoy",
+      "to": "svc",
+      "label": "mtls proxy"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Polyglot Ingress & Mesh",
+      "items": [
+        "BFF optimizes mobile payload size and eliminates multiple round trips",
+        "Sidecar handles zero-trust mTLS without touching app code",
+        "OpenTelemetry traces injected automatically"
+      ]
+    }
+  ]
+}

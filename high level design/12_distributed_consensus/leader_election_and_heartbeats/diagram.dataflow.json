@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Leader Election & Heartbeat Failure Detection Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Heartbeat Monitor"
+    },
+    {
+      "label": "Crash Detection"
+    },
+    {
+      "label": "Election Call"
+    },
+    {
+      "label": "New Leader"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ping",
+      "type": "frontend",
+      "label": "Heartbeat Ping",
+      "sublabel": "Every 150ms",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "detector",
+      "type": "backend",
+      "label": "Failure Detector",
+      "sublabel": "Missed 3 pings",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "election",
+      "type": "security",
+      "label": "Bully Protocol",
+      "sublabel": "Broadcast higher IDs",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "leader",
+      "type": "database",
+      "label": "Node 4",
+      "sublabel": "Elected Leader",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "ping",
+      "to": "detector",
+      "label": "missed ack"
+    },
+    {
+      "from": "detector",
+      "to": "election",
+      "label": "trigger"
+    },
+    {
+      "from": "election",
+      "to": "leader",
+      "label": "proclaim"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "High Availability Failover",
+      "items": [
+        "Auto-promotes standby node upon leader crash",
+        "Prevents split-brain through majority quorum checks",
+        "Phi Accrual failure detection adapts to network jitter"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Dynamic Feature Flags & Kill Switch Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "App Runtime"
+    },
+    {
+      "label": "Config Service"
+    },
+    {
+      "label": "Flag Evaluator"
+    },
+    {
+      "label": "UI / Feature Path"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Mobile / Web App",
+      "sublabel": "eval(user_id)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "cfg",
+      "type": "backend",
+      "label": "LaunchDarkly",
+      "sublabel": "Real-time config push",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "eval",
+      "type": "security",
+      "label": "Flag Rules Engine",
+      "sublabel": "Hashing & cohort check",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "ui",
+      "type": "database",
+      "label": "Activated Feature",
+      "sublabel": "New Checkout View",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "app",
+      "to": "cfg",
+      "label": "sync flags"
+    },
+    {
+      "from": "cfg",
+      "to": "eval",
+      "label": "rules rule"
+    },
+    {
+      "from": "eval",
+      "to": "ui",
+      "label": "render"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Continuous Delivery Guardrails",
+      "items": [
+        "Decouples code deployment from business feature release",
+        "A/B testing user cohorts with percentage rollouts",
+        "Instant incident mitigation via emergency kill switches"
+      ]
+    }
+  ]
+}

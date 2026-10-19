@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Time-Series, Graph & Vector Databases Data Flow",
+    "output": "high level design/07_database_architectures/specialized_databases/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Embedding Ingest"
+    },
+    {
+      "label": "HNSW Vector Index"
+    },
+    {
+      "label": "Similarity Engine"
+    },
+    {
+      "label": "Nearest K Results"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "embed",
+      "type": "frontend",
+      "label": "Query Vector",
+      "sublabel": "[0.9, 0.1, 0.0] dim=1536",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "hnsw",
+      "type": "backend",
+      "label": "HNSW Graph",
+      "sublabel": "Hierarchical layers",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sim",
+      "type": "security",
+      "label": "Cosine Sim",
+      "sublabel": "Dot-product scoring",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "top_k",
+      "type": "database",
+      "label": "Top-K Matches",
+      "sublabel": "Apple, Fruit (0.98)",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "embed",
+      "to": "hnsw",
+      "label": "vector search"
+    },
+    {
+      "from": "hnsw",
+      "to": "sim",
+      "label": "candidate node"
+    },
+    {
+      "from": "sim",
+      "to": "top_k",
+      "label": "rank top k"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Semantic Retrieval",
+      "items": [
+        "HNSW graph executes approximate nearest neighbor in sub-10ms",
+        "Cosine and Euclidean distances measure semantic similarity",
+        "Powers modern RAG pipelines and image search engines"
+      ]
+    }
+  ]
+}

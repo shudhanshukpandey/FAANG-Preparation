@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Smart Remote Command & Undo Data Flow",
+    "output": "low level design/06_behavioral_patterns/command/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Invoker"
+    },
+    {
+      "label": "Command Object"
+    },
+    {
+      "label": "Receiver & Stack"
+    },
+    {
+      "label": "Undo Execution"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "remote",
+      "type": "frontend",
+      "label": "RemoteControl",
+      "sublabel": "press_button()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "dim",
+      "type": "backend",
+      "label": "DimCommand",
+      "sublabel": "execute() / undo()",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "light",
+      "type": "external",
+      "label": "SmartLight",
+      "sublabel": "Receiver Device",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "stack",
+      "type": "database",
+      "label": "History Stack",
+      "sublabel": "undo() stack",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "undo",
+      "type": "backend",
+      "label": "Undo Action",
+      "sublabel": "Revert to Previous",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "remote",
+      "to": "dim",
+      "label": "submit"
+    },
+    {
+      "from": "dim",
+      "to": "light",
+      "label": "set level"
+    },
+    {
+      "from": "dim",
+      "to": "stack",
+      "label": "push history"
+    },
+    {
+      "from": "stack",
+      "to": "undo",
+      "label": "pop & revert"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Reversible Encapsulation",
+      "items": [
+        "Request encapsulated as first-class object",
+        "Enables queuing, logging, and undo/redo stacks",
+        "Decouples sender from receiver"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Point-to-Point Message Queue Data Flow",
+    "output": "high level design/05_communication_patterns/message_queues/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Producers"
+    },
+    {
+      "label": "Message Queue"
+    },
+    {
+      "label": "Worker Pool"
+    },
+    {
+      "label": "Persistent DB"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prod",
+      "type": "frontend",
+      "label": "Order API",
+      "sublabel": "produce(order)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "mq",
+      "type": "messagebus",
+      "label": "RabbitMQ / SQS",
+      "sublabel": "FIFO Queue Buffer",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "w1",
+      "type": "backend",
+      "label": "Worker 1",
+      "sublabel": "Background process",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "w2",
+      "type": "backend",
+      "label": "Worker 2",
+      "sublabel": "Background process",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "DB Store",
+      "sublabel": "Processed writes",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "prod",
+      "to": "mq",
+      "label": "enqueue"
+    },
+    {
+      "from": "mq",
+      "to": "w1",
+      "label": "poll"
+    },
+    {
+      "from": "mq",
+      "to": "w2",
+      "label": "poll"
+    },
+    {
+      "from": "w1",
+      "to": "db",
+      "label": "commit"
+    },
+    {
+      "from": "w2",
+      "to": "db",
+      "label": "commit"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Asynchronous Decoupling",
+      "items": [
+        "Buffers sudden 10x traffic spikes",
+        "Consumers scale independently from API tier",
+        "Guarantees task delivery with ACK acknowledgements"
+      ]
+    }
+  ]
+}

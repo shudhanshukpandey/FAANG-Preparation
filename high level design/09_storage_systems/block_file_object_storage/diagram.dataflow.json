@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Block, File & Object Storage Architecture Data Flow",
+    "output": "high level design/09_storage_systems/block_file_object_storage/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client API"
+    },
+    {
+      "label": "Storage Gateway"
+    },
+    {
+      "label": "Data Processing"
+    },
+    {
+      "label": "Storage Nodes"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "S3 PUT API",
+      "sublabel": "Upload 5GB Video",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "s3_gw",
+      "type": "security",
+      "label": "S3 Gateway",
+      "sublabel": "REST endpoints",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "meta",
+      "type": "database",
+      "label": "Metadata Store",
+      "sublabel": "Key to chunk map",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "chunks",
+      "type": "backend",
+      "label": "SHA256 Chunker",
+      "sublabel": "128MB slice",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "disks",
+      "type": "database",
+      "label": "Commodity Disks",
+      "sublabel": "Replicated blocks",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "s3_gw",
+      "label": "put req"
+    },
+    {
+      "from": "s3_gw",
+      "to": "meta",
+      "label": "save meta"
+    },
+    {
+      "from": "s3_gw",
+      "to": "chunks",
+      "label": "stream payload"
+    },
+    {
+      "from": "chunks",
+      "to": "disks",
+      "label": "store block"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Exabyte-Scale Storage",
+      "items": [
+        "Decouples metadata lookup from binary payload storage",
+        "Content-addressing eliminates duplicate file blocks",
+        "Achieves 11 nines (99.999999999%) durability"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Rate Limiter Service Decorator Data Flow",
+    "output": "low level design/09_classic_machine_coding/rate_limiter_service/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "API Request"
+    },
+    {
+      "label": "Sliding Log"
+    },
+    {
+      "label": "Evaluation"
+    },
+    {
+      "label": "HTTP Response"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "Client API Call",
+      "sublabel": "User: Bob (FREE)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "log",
+      "type": "database",
+      "label": "Timestamp Log",
+      "sublabel": "Sliding Window",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "eval",
+      "type": "security",
+      "label": "Rate Evaluator",
+      "sublabel": "Max 3 req / 1 sec",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "ok",
+      "type": "backend",
+      "label": "HTTP 200 OK",
+      "sublabel": "X-RateLimit headers",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "fail",
+      "type": "security",
+      "label": "HTTP 429 Error",
+      "sublabel": "Retry-After header",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "log",
+      "label": "extract user"
+    },
+    {
+      "from": "log",
+      "to": "eval",
+      "label": "window filter"
+    },
+    {
+      "from": "eval",
+      "to": "ok",
+      "label": "allowed"
+    },
+    {
+      "from": "eval",
+      "to": "fail",
+      "label": "rate exceeded"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Production API Protection",
+      "items": [
+        "Non-intrusive @rate_limit decorator",
+        "Sliding window eliminates boundary burst vulnerabilities",
+        "Full RFC rate limit response headers"
+      ]
+    }
+  ]
+}

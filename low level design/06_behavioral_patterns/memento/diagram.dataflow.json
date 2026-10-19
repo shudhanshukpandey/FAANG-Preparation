@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Text Editor Memento & Undo Data Flow",
+    "output": "low level design/06_behavioral_patterns/memento/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Editor Originator"
+    },
+    {
+      "label": "Snapshot Capture"
+    },
+    {
+      "label": "Caretaker History"
+    },
+    {
+      "label": "Restored Buffer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ed",
+      "type": "frontend",
+      "label": "TextEditor",
+      "sublabel": "type_text()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "mem",
+      "type": "database",
+      "label": "EditorMemento",
+      "sublabel": "create_snapshot()",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "caretaker",
+      "type": "backend",
+      "label": "HistoryCaretaker",
+      "sublabel": "push(snapshot)",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "restore",
+      "type": "backend",
+      "label": "RestoredBuffer",
+      "sublabel": "pop & restore()",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "ed",
+      "to": "mem",
+      "label": "save"
+    },
+    {
+      "from": "mem",
+      "to": "caretaker",
+      "label": "push"
+    },
+    {
+      "from": "caretaker",
+      "to": "restore",
+      "label": "pop & apply"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Encapsulated State Rollback",
+      "items": [
+        "Originator state captured without exposing internals",
+        "Caretaker cannot tamper with memento data",
+        "Standard implementation for undo/redo"
+      ]
+    }
+  ]
+}

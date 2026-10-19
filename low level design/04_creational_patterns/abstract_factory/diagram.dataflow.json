@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Multi-Cloud Abstract Factory Data Flow",
+    "output": "low level design/04_creational_patterns/abstract_factory/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "DevOps Client"
+    },
+    {
+      "label": "Cloud Factory"
+    },
+    {
+      "label": "Compute Resource"
+    },
+    {
+      "label": "Storage Resource"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "devops",
+      "type": "frontend",
+      "label": "DevOps Deployer",
+      "sublabel": "deploy_infra()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "aws_f",
+      "type": "cloud",
+      "label": "AWS Factory",
+      "sublabel": "Creates AWS Family",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "gcp_f",
+      "type": "cloud",
+      "label": "GCP Factory",
+      "sublabel": "Creates GCP Family",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "ec2",
+      "type": "backend",
+      "label": "AWS EC2 VM",
+      "sublabel": "Compute Instance",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "gce",
+      "type": "backend",
+      "label": "Google GCE VM",
+      "sublabel": "Compute Instance",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "s3",
+      "type": "database",
+      "label": "AWS S3 Bucket",
+      "sublabel": "Object Storage",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "gcs",
+      "type": "database",
+      "label": "Google GCS Bucket",
+      "sublabel": "Object Storage",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "devops",
+      "to": "aws_f",
+      "label": "select AWS"
+    },
+    {
+      "from": "devops",
+      "to": "gcp_f",
+      "label": "select GCP"
+    },
+    {
+      "from": "aws_f",
+      "to": "ec2",
+      "label": "create compute"
+    },
+    {
+      "from": "ec2",
+      "to": "s3",
+      "label": "attach storage"
+    },
+    {
+      "from": "gcp_f",
+      "to": "gce",
+      "label": "create compute"
+    },
+    {
+      "from": "gce",
+      "to": "gcs",
+      "label": "attach storage"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Product Families",
+      "items": [
+        "Produces compatible families of objects",
+        "Client never mixes AWS compute with GCP storage",
+        "Swapping cloud vendor requires 1 line"
+      ]
+    }
+  ]
+}

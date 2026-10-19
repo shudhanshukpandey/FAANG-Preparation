@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Database Connection Pool Data Flow",
+    "output": "low level design/08_resilience_and_concurrency/object_pool/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Worker Threads"
+    },
+    {
+      "label": "Pool Queue"
+    },
+    {
+      "label": "Leased Connection"
+    },
+    {
+      "label": "Database Server"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "w1",
+      "type": "frontend",
+      "label": "Worker 1",
+      "sublabel": "acquire()",
+      "stage": 0,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "w2",
+      "type": "frontend",
+      "label": "Worker 2",
+      "sublabel": "acquire()",
+      "stage": 0,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "queue",
+      "type": "messagebus",
+      "label": "Available Queue",
+      "sublabel": "Thread-safe capacity=2",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "c1",
+      "type": "backend",
+      "label": "Connection #1",
+      "sublabel": "Active socket",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "c2",
+      "type": "backend",
+      "label": "Connection #2",
+      "sublabel": "Active socket",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "PostgreSQL Server",
+      "sublabel": "Socket queries",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "w1",
+      "to": "queue",
+      "label": "borrow"
+    },
+    {
+      "from": "w2",
+      "to": "queue",
+      "label": "borrow"
+    },
+    {
+      "from": "queue",
+      "to": "c1",
+      "label": "lease 1"
+    },
+    {
+      "from": "queue",
+      "to": "c2",
+      "label": "lease 2"
+    },
+    {
+      "from": "c1",
+      "to": "db",
+      "label": "execute SQL"
+    },
+    {
+      "from": "c2",
+      "to": "db",
+      "label": "execute SQL"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Resource Reusability",
+      "items": [
+        "Avoids expensive TCP connection handshakes",
+        "Throttles concurrent load on database server",
+        "Context manager guarantees release back to pool"
+      ]
+    }
+  ]
+}

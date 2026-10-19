@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Retrieval-Augmented Generation (RAG) Architecture Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "User Prompt"
+    },
+    {
+      "label": "Vector Embedding"
+    },
+    {
+      "label": "Context Retrieval"
+    },
+    {
+      "label": "LLM Synthesis"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prompt",
+      "type": "frontend",
+      "label": "User Query",
+      "sublabel": "What is system design?",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "embed",
+      "type": "security",
+      "label": "Embedding Model",
+      "sublabel": "text-embedding-3",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "vdb",
+      "type": "database",
+      "label": "Vector Database",
+      "sublabel": "HNSW Cosine Top-K",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "llm",
+      "type": "backend",
+      "label": "LLM Inference",
+      "sublabel": "Grounded response",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "prompt",
+      "to": "embed",
+      "label": "vectorize"
+    },
+    {
+      "from": "embed",
+      "to": "vdb",
+      "label": "dense search"
+    },
+    {
+      "from": "vdb",
+      "to": "llm",
+      "label": "grounded"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Grounded AI Intelligence",
+      "items": [
+        "Suppresses hallucinations by grounding answers in enterprise documents",
+        "Zero model retraining cost when corporate knowledge changes",
+        "Reranking models (Cohere) refine Top-100 candidates to Top-5"
+      ]
+    }
+  ]
+}

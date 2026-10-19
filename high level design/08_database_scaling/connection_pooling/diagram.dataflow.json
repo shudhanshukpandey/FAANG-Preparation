@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Database Connection Pool Management Data Flow",
+    "output": "high level design/08_database_scaling/connection_pooling/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Worker Threads"
+    },
+    {
+      "label": "Connection Pool"
+    },
+    {
+      "label": "Active Leases"
+    },
+    {
+      "label": "DB Server"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "workers",
+      "type": "frontend",
+      "label": "500 App Threads",
+      "sublabel": "Concurrent requests",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pool",
+      "type": "backend",
+      "label": "PgBouncer Pool",
+      "sublabel": "Max pool = 50",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "lease",
+      "type": "security",
+      "label": "Warm Sockets",
+      "sublabel": "Pre-authenticated",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "PostgreSQL Engine",
+      "sublabel": "Protected from OOM",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "workers",
+      "to": "pool",
+      "label": "acquire"
+    },
+    {
+      "from": "pool",
+      "to": "lease",
+      "label": "assign socket"
+    },
+    {
+      "from": "lease",
+      "to": "db",
+      "label": "execute query"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Resource Protection",
+      "items": [
+        "Eliminates expensive TCP socket handshakes",
+        "Throttles database backend thread concurrency",
+        "Context manager guarantees socket return"
+      ]
+    }
+  ]
+}

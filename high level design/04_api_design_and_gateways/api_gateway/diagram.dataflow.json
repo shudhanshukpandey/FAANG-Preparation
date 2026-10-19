@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "API Gateway Ingress Architecture Data Flow",
+    "output": "high level design/04_api_design_and_gateways/api_gateway/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Mobile & Web"
+    },
+    {
+      "label": "API Gateway"
+    },
+    {
+      "label": "Auth & Rate Limit"
+    },
+    {
+      "label": "Microservices"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Client Ingress",
+      "sublabel": "JWT in header",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "gw",
+      "type": "security",
+      "label": "API Gateway",
+      "sublabel": "Kong / Envoy",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "auth",
+      "type": "security",
+      "label": "Auth Filter",
+      "sublabel": "Validate token",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "svc_u",
+      "type": "backend",
+      "label": "User Service",
+      "sublabel": "Internal RPC",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "svc_o",
+      "type": "backend",
+      "label": "Order Service",
+      "sublabel": "Internal RPC",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "gw",
+      "label": "request"
+    },
+    {
+      "from": "gw",
+      "to": "auth",
+      "label": "verify"
+    },
+    {
+      "from": "auth",
+      "to": "svc_u",
+      "label": "route users"
+    },
+    {
+      "from": "auth",
+      "to": "svc_o",
+      "label": "route orders"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Ingress Decoupling",
+      "items": [
+        "Shields internal microservice topology",
+        "Centralizes authentication & rate limiting",
+        "Transforms external protocols to internal gRPC"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Service Layer Orchestration Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/service_layer/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "FastAPI Controller"
+    },
+    {
+      "label": "Service Layer"
+    },
+    {
+      "label": "Repositories"
+    },
+    {
+      "label": "External Effects"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "ctrl",
+      "type": "frontend",
+      "label": "FastAPI Router",
+      "sublabel": "POST /checkout",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "svc",
+      "type": "backend",
+      "label": "OrderService",
+      "sublabel": "Domain Workflow",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "inv",
+      "type": "database",
+      "label": "InventoryRepo",
+      "sublabel": "deduct_stock()",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "ord",
+      "type": "database",
+      "label": "OrderRepo",
+      "sublabel": "save_order()",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "mail",
+      "type": "external",
+      "label": "EmailNotifier",
+      "sublabel": "send_receipt()",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "ctrl",
+      "to": "svc",
+      "label": "place_order()"
+    },
+    {
+      "from": "svc",
+      "to": "inv",
+      "label": "1. deduct"
+    },
+    {
+      "from": "svc",
+      "to": "ord",
+      "label": "2. save"
+    },
+    {
+      "from": "svc",
+      "to": "mail",
+      "label": "3. email"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Thin Controllers, Rich Services",
+      "items": [
+        "Router handles HTTP parsing and status codes only",
+        "Service orchestrates business validation and domain models",
+        "Reusable across HTTP, CLI, and async queues"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Protocol Structural Typing Data Flow",
+    "output": "low level design/01_oop_fundamentals/interfaces_and_protocols/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Caller Logic"
+    },
+    {
+      "label": "Protocol Contract"
+    },
+    {
+      "label": "Type Check"
+    },
+    {
+      "label": "Adapters"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Payment Client",
+      "sublabel": "process(pay_proto)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "proto",
+      "type": "backend",
+      "label": "PaymentProtocol",
+      "sublabel": "pay(amount) contract",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "checker",
+      "type": "security",
+      "label": "Mypy / Typeguard",
+      "sublabel": "Duck-typing check",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "stripe",
+      "type": "external",
+      "label": "StripeAdapter",
+      "sublabel": "Satisfies Protocol",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "paypal",
+      "type": "external",
+      "label": "PayPalAdapter",
+      "sublabel": "Satisfies Protocol",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "proto",
+      "label": "targets"
+    },
+    {
+      "from": "proto",
+      "to": "checker",
+      "label": "verifies"
+    },
+    {
+      "from": "checker",
+      "to": "stripe",
+      "label": "valid stripe"
+    },
+    {
+      "from": "checker",
+      "to": "paypal",
+      "label": "valid paypal"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Structural Subtyping",
+      "items": [
+        "Python typing.Protocol enables duck typing with static guarantees",
+        "Classes implement protocol without explicit inheritance",
+        "Decouples callers from third-party SDK signatures"
+      ]
+    }
+  ]
+}

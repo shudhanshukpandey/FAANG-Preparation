@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Horizontal vs Vertical Scalability Architecture",
+    "output": "high level design/01_core_concepts/scalability/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Traffic Burst"
+    },
+    {
+      "label": "Auto-Scaler"
+    },
+    {
+      "label": "Stateless Cluster"
+    },
+    {
+      "label": "Shared DB Tier"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "Traffic Surge",
+      "sublabel": "10,000 req/sec",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "scaler",
+      "type": "backend",
+      "label": "Auto-Scaler",
+      "sublabel": "CPU > 70% threshold",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "w1",
+      "type": "backend",
+      "label": "Worker Pod 1",
+      "sublabel": "Stateless app",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "w2",
+      "type": "backend",
+      "label": "Worker Pod 2",
+      "sublabel": "Stateless app",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Managed DB",
+      "sublabel": "Aurora Read Replica",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "scaler",
+      "label": "burst"
+    },
+    {
+      "from": "scaler",
+      "to": "w1",
+      "label": "dispatch"
+    },
+    {
+      "from": "scaler",
+      "to": "w2",
+      "label": "scale out"
+    },
+    {
+      "from": "w1",
+      "to": "db",
+      "label": "query"
+    },
+    {
+      "from": "w2",
+      "to": "db",
+      "label": "query"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Elastic Scale-Out",
+      "items": [
+        "Stateless workers decouple compute from persistent state",
+        "Auto-scaler provisions pods based on metrics",
+        "Read replicas absorb increased read traffic"
+      ]
+    }
+  ]
+}

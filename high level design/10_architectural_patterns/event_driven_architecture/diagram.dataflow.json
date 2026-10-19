@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Event-Driven Choreography Data Flow",
+    "output": "high level design/10_architectural_patterns/event_driven_architecture/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Order Service"
+    },
+    {
+      "label": "Event Backbone"
+    },
+    {
+      "label": "Downstream Consumers"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "order",
+      "type": "frontend",
+      "label": "Order Service",
+      "sublabel": "place_order()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "event_bus",
+      "type": "messagebus",
+      "label": "Kafka Event Bus",
+      "sublabel": "orders.events",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "billing",
+      "type": "backend",
+      "label": "Billing Service",
+      "sublabel": "Charge card",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "ship",
+      "type": "backend",
+      "label": "Shipping Service",
+      "sublabel": "Pack box",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "order",
+      "to": "event_bus",
+      "label": "publish"
+    },
+    {
+      "from": "event_bus",
+      "to": "billing",
+      "label": "consume"
+    },
+    {
+      "from": "event_bus",
+      "to": "ship",
+      "label": "consume"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Loose Asynchronous Coupling",
+      "items": [
+        "Producers have zero knowledge of consumers",
+        "New analytics or fraud consumers added with zero code changes",
+        "High resiliency against temporary downstream outages"
+      ]
+    }
+  ]
+}

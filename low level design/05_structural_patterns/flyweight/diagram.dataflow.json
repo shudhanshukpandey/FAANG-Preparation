@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Flyweight Memory Optimization Data Flow",
+    "output": "low level design/05_structural_patterns/flyweight/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Forest Scene"
+    },
+    {
+      "label": "Tree Context"
+    },
+    {
+      "label": "Flyweight Factory"
+    },
+    {
+      "label": "Shared Type"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "scene",
+      "type": "frontend",
+      "label": "Forest Scene",
+      "sublabel": "100,000 trees",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "c1",
+      "type": "backend",
+      "label": "Tree Context",
+      "sublabel": "x, y coords",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "factory",
+      "type": "backend",
+      "label": "TreeFactory",
+      "sublabel": "Flyweight Registry",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "oak",
+      "type": "database",
+      "label": "Oak Flyweight",
+      "sublabel": "50KB Shared Sprite",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "pine",
+      "type": "database",
+      "label": "Pine Flyweight",
+      "sublabel": "45KB Shared Sprite",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "scene",
+      "to": "c1",
+      "label": "render"
+    },
+    {
+      "from": "c1",
+      "to": "factory",
+      "label": "get_type()"
+    },
+    {
+      "from": "factory",
+      "to": "oak",
+      "label": "share oak"
+    },
+    {
+      "from": "factory",
+      "to": "pine",
+      "label": "share pine"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Memory Compression",
+      "items": [
+        "Intrinsic state (heavy textures) stored once",
+        "Extrinsic state (x, y coordinates) kept lightweight",
+        "99% RAM reduction for massive collections"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "CQRS (Command Query Responsibility Segregation) Data Flow",
+    "output": "high level design/10_architectural_patterns/cqrs/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Actions"
+    },
+    {
+      "label": "CQRS Handlers"
+    },
+    {
+      "label": "Store Tier"
+    },
+    {
+      "label": "Query Projections"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "App Users",
+      "sublabel": "Commands & Queries",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "cmd",
+      "type": "backend",
+      "label": "Command Handler",
+      "sublabel": "Validate & write",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "qry",
+      "type": "backend",
+      "label": "Query Handler",
+      "sublabel": "Fast read path",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "write_db",
+      "type": "database",
+      "label": "Relational DB",
+      "sublabel": "Write Master",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "cache",
+      "type": "database",
+      "label": "Fast Cache",
+      "sublabel": "In-memory view",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "event_log",
+      "type": "messagebus",
+      "label": "Event Stream",
+      "sublabel": "CDC publisher",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "read_db",
+      "type": "database",
+      "label": "Elasticsearch",
+      "sublabel": "Denormalized View",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "cmd",
+      "label": "write action"
+    },
+    {
+      "from": "client",
+      "to": "qry",
+      "label": "read query"
+    },
+    {
+      "from": "cmd",
+      "to": "write_db",
+      "label": "commit"
+    },
+    {
+      "from": "write_db",
+      "to": "event_log",
+      "label": "publish"
+    },
+    {
+      "from": "qry",
+      "to": "cache",
+      "label": "cache hit"
+    },
+    {
+      "from": "cache",
+      "to": "read_db",
+      "label": "index scan"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Asymmetric Scaling",
+      "items": [
+        "Read views tailored to UI screen requirements",
+        "Scale reads 100x without straining write database",
+        "Eventual consistency synced via CDC or message bus"
+      ]
+    }
+  ]
+}

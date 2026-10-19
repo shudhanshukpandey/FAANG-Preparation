@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "ETL Pipeline Template Method Data Flow",
+    "output": "low level design/06_behavioral_patterns/template_method/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Template Method"
+    },
+    {
+      "label": "Extract Subclass"
+    },
+    {
+      "label": "Transform & Clean"
+    },
+    {
+      "label": "Load Destination"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "tpl",
+      "type": "backend",
+      "label": "run_pipeline()",
+      "sublabel": "Invariant skeleton",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "csv_ext",
+      "type": "backend",
+      "label": "CSV Extractor",
+      "sublabel": "Format hook",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "json_ext",
+      "type": "backend",
+      "label": "JSON Extractor",
+      "sublabel": "Format hook",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "clean",
+      "type": "backend",
+      "label": "clean_records()",
+      "sublabel": "Shared Base Logic",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "dw",
+      "type": "database",
+      "label": "Data Warehouse",
+      "sublabel": "load()",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "tpl",
+      "to": "csv_ext",
+      "label": "step 1"
+    },
+    {
+      "from": "tpl",
+      "to": "json_ext",
+      "label": "step 1 (alt)"
+    },
+    {
+      "from": "csv_ext",
+      "to": "clean",
+      "label": "step 2"
+    },
+    {
+      "from": "json_ext",
+      "to": "clean",
+      "label": "step 2"
+    },
+    {
+      "from": "clean",
+      "to": "dw",
+      "label": "step 3"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "The Hollywood Principle",
+      "items": [
+        "Base class controls algorithm sequence",
+        "Subclasses override specific steps only",
+        "Prevents duplicate boilerplate across format parsers"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Cache Eviction Policies (LRU / LFU) Data Flow",
+    "output": "high level design/06_caching_strategies/eviction_policies/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Access"
+    },
+    {
+      "label": "Capacity Gate"
+    },
+    {
+      "label": "Recency Order"
+    },
+    {
+      "label": "Evicted Node"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "put(key, val)",
+      "sublabel": "New write",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "gate",
+      "type": "backend",
+      "label": "Capacity Check",
+      "sublabel": "Size > Max",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "head",
+      "type": "database",
+      "label": "MRU Head",
+      "sublabel": "Most Recently Used",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "tail",
+      "type": "database",
+      "label": "LRU Tail",
+      "sublabel": "Least Recently Used",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "evict",
+      "type": "security",
+      "label": "Eviction Prune",
+      "sublabel": "Garbage collected",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "gate",
+      "label": "insert"
+    },
+    {
+      "from": "gate",
+      "to": "head",
+      "label": "mark MRU"
+    },
+    {
+      "from": "gate",
+      "to": "tail",
+      "label": "shift down"
+    },
+    {
+      "from": "tail",
+      "to": "evict",
+      "label": "evict"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Predictable Memory Bounds",
+      "items": [
+        "O(1) get/put operations using Doubly Linked List",
+        "Guarantees memory usage never exceeds limit",
+        "Matches real-world access temporal locality"
+      ]
+    }
+  ]
+}

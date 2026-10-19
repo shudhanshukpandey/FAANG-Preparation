@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Lambda vs Kappa Architecture Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Event Stream"
+    },
+    {
+      "label": "Kafka Log (Source of Truth)"
+    },
+    {
+      "label": "Stream Engine"
+    },
+    {
+      "label": "Serving Views"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "events",
+      "type": "frontend",
+      "label": "IoT Ingest",
+      "sublabel": "Continuous telemetry",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "log",
+      "type": "messagebus",
+      "label": "Append-Only Log",
+      "sublabel": "Infinite retention",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "flink",
+      "type": "backend",
+      "label": "Apache Flink",
+      "sublabel": "Single codebase",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "views",
+      "type": "database",
+      "label": "Serving Views",
+      "sublabel": "Real-time queries",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "events",
+      "to": "log",
+      "label": "append"
+    },
+    {
+      "from": "log",
+      "to": "flink",
+      "label": "stream/replay"
+    },
+    {
+      "from": "flink",
+      "to": "views",
+      "label": "materialize"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Simplified Architecture",
+      "items": [
+        "Eliminates maintaining two separate batch and streaming codebases",
+        "Historical backfills handled seamlessly by rewinding offsets",
+        "Recommended modern big data standard (Jay Kreps)"
+      ]
+    }
+  ]
+}

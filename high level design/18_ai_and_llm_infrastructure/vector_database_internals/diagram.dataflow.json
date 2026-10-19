@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Vector Database Internals (HNSW & Quantization) Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Vector Query"
+    },
+    {
+      "label": "Quantization (PQ)"
+    },
+    {
+      "label": "HNSW Graph Navigation"
+    },
+    {
+      "label": "Top-K Candidates"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "query",
+      "type": "frontend",
+      "label": "Embedding Vector",
+      "sublabel": "1536 floats (6KB)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pq",
+      "type": "security",
+      "label": "Product Quantizer",
+      "sublabel": "Compressed to 64 bytes",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "hnsw",
+      "type": "backend",
+      "label": "HNSW Layers",
+      "sublabel": "Greedy routing hops",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "results",
+      "type": "database",
+      "label": "Exact Reranker",
+      "sublabel": "Sub-5ms response",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "query",
+      "to": "pq",
+      "label": "compress"
+    },
+    {
+      "from": "pq",
+      "to": "hnsw",
+      "label": "search graph"
+    },
+    {
+      "from": "hnsw",
+      "to": "results",
+      "label": "score distance"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Billion-Scale Vector Search",
+      "items": [
+        "HNSW achieves logarithmic O(log N) search complexity",
+        "Quantization enables fitting 1 billion vectors into host RAM",
+        "Powers Milvus, Pinecone, Qdrant, and pgvector"
+      ]
+    }
+  ]
+}

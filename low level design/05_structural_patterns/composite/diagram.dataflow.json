@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "File System Composite Tree Data Flow",
+    "output": "low level design/05_structural_patterns/composite/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Call"
+    },
+    {
+      "label": "Composite Root"
+    },
+    {
+      "label": "Sub-Composite"
+    },
+    {
+      "label": "Leaf Items"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "CLI Client",
+      "sublabel": "get_size_kb()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "root",
+      "type": "backend",
+      "label": "Root Directory",
+      "sublabel": "Composite Node",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "src",
+      "type": "backend",
+      "label": "src/ Directory",
+      "sublabel": "Composite Child",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "f1",
+      "type": "database",
+      "label": "index.html",
+      "sublabel": "Leaf (12.5 KB)",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "f2",
+      "type": "database",
+      "label": "app.js",
+      "sublabel": "Leaf (25.8 KB)",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "root",
+      "label": "calc size"
+    },
+    {
+      "from": "root",
+      "to": "src",
+      "label": "recurse"
+    },
+    {
+      "from": "src",
+      "to": "f1",
+      "label": "sum leaf"
+    },
+    {
+      "from": "src",
+      "to": "f2",
+      "label": "sum leaf"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Uniform Tree Operations",
+      "items": [
+        "Leaf and Composite share FileSystemItem interface",
+        "Client treats nested containers and single files identically",
+        "Natural recursive data flow"
+      ]
+    }
+  ]
+}

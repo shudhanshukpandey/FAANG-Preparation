@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Liskov Substitution Principle (LSP) Hierarchy Data Flow",
+    "output": "low level design/02_design_principles/lsp/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Caller"
+    },
+    {
+      "label": "General Bird"
+    },
+    {
+      "label": "Hierarchy"
+    },
+    {
+      "label": "Safe Execution"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Flock Simulator",
+      "sublabel": "fly_birds(flock)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "bird",
+      "type": "backend",
+      "label": "Bird Base",
+      "sublabel": "make_sound() only",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "flying",
+      "type": "backend",
+      "label": "FlyingBird",
+      "sublabel": "Adds fly() contract",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "penguin",
+      "type": "backend",
+      "label": "Penguin",
+      "sublabel": "Does NOT inherit fly()",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "sky",
+      "type": "external",
+      "label": "Sky Simulator",
+      "sublabel": "Zero exceptions",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "bird",
+      "label": "iterates"
+    },
+    {
+      "from": "bird",
+      "to": "flying",
+      "label": "substitutable"
+    },
+    {
+      "from": "bird",
+      "to": "penguin",
+      "label": "substitutable"
+    },
+    {
+      "from": "flying",
+      "to": "sky",
+      "label": "safe flight"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Subtype Behavioral Compatibility",
+      "items": [
+        "Subtypes must be substitutable for their base types without breaking code",
+        "Do not force subclasses to raise NotImplementedError for unsupported methods",
+        "Split hierarchies to reflect actual behavioral contracts"
+      ]
+    }
+  ]
+}

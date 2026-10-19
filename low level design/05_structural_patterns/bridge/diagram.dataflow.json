@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Decoupled Remote & Device Bridge Data Flow",
+    "output": "low level design/05_structural_patterns/bridge/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "User Remote"
+    },
+    {
+      "label": "Abstraction"
+    },
+    {
+      "label": "Bridge Protocol"
+    },
+    {
+      "label": "Concrete Device"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "user",
+      "type": "frontend",
+      "label": "User Click",
+      "sublabel": "press power / mute",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "remote",
+      "type": "backend",
+      "label": "AdvancedRemote",
+      "sublabel": "Abstraction",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "device",
+      "type": "backend",
+      "label": "Device Interface",
+      "sublabel": "Bridge Protocol",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "tv",
+      "type": "external",
+      "label": "Sony TV",
+      "sublabel": "Hardware Driver",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "radio",
+      "type": "external",
+      "label": "Smart Radio",
+      "sublabel": "Audio Driver",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "user",
+      "to": "remote",
+      "label": "action"
+    },
+    {
+      "from": "remote",
+      "to": "device",
+      "label": "delegates"
+    },
+    {
+      "from": "device",
+      "to": "tv",
+      "label": "enable()"
+    },
+    {
+      "from": "device",
+      "to": "radio",
+      "label": "enable()"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Orthogonal Hierarchies",
+      "items": [
+        "Remote controls and physical devices vary independently",
+        "Avoids M x N combinatorial class explosion",
+        "Connected via object composition (bridge)"
+      ]
+    }
+  ]
+}

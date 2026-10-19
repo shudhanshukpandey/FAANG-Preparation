@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Double-Dispatch Document Visitor Data Flow",
+    "output": "low level design/06_behavioral_patterns/visitor/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Document Hierarchy"
+    },
+    {
+      "label": "accept(visitor)"
+    },
+    {
+      "label": "Double Dispatch"
+    },
+    {
+      "label": "Rendered Target"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "doc",
+      "type": "frontend",
+      "label": "Document Elements",
+      "sublabel": "Heading, CodeBlock",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "accept",
+      "type": "backend",
+      "label": "el.accept(v)",
+      "sublabel": "Dispatch 1",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "v_md",
+      "type": "backend",
+      "label": "MarkdownVisitor",
+      "sublabel": "visit_heading()",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "v_html",
+      "type": "backend",
+      "label": "HTMLVisitor",
+      "sublabel": "visit_heading()",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "out_md",
+      "type": "database",
+      "label": "Markdown Output",
+      "sublabel": "Markdown string",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "out_html",
+      "type": "database",
+      "label": "HTML Output",
+      "sublabel": "HTML tags",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "doc",
+      "to": "accept",
+      "label": "traverse"
+    },
+    {
+      "from": "accept",
+      "to": "v_md",
+      "label": "dispatch md"
+    },
+    {
+      "from": "accept",
+      "to": "v_html",
+      "label": "dispatch html"
+    },
+    {
+      "from": "v_md",
+      "to": "out_md",
+      "label": "emit"
+    },
+    {
+      "from": "v_html",
+      "to": "out_html",
+      "label": "emit"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Double-Dispatch Architecture",
+      "items": [
+        "Adds operations without modifying element classes",
+        "Resolves method by both element and visitor types",
+        "Essential for compiler ASTs and exporter modules"
+      ]
+    }
+  ]
+}

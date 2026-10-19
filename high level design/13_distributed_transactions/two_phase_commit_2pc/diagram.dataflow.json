@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Two-Phase Commit (2PC) Atomic Coordination Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Coordinator"
+    },
+    {
+      "label": "Phase 1: Prepare"
+    },
+    {
+      "label": "Phase 2: Commit"
+    },
+    {
+      "label": "Resource Cohorts"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "coord",
+      "type": "frontend",
+      "label": "Transaction Mgr",
+      "sublabel": "Global Coordinator",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "prep",
+      "type": "security",
+      "label": "Prepare Query",
+      "sublabel": "Can you commit?",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "commit",
+      "type": "backend",
+      "label": "Global Commit",
+      "sublabel": "All votes affirmative",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "dbs",
+      "type": "database",
+      "label": "Cohort DBs",
+      "sublabel": "DB1 & DB2 flushed",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "coord",
+      "to": "prep",
+      "label": "vote request"
+    },
+    {
+      "from": "prep",
+      "to": "commit",
+      "label": "all yes"
+    },
+    {
+      "from": "commit",
+      "to": "dbs",
+      "label": "finalize"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Strict ACID Across Databases",
+      "items": [
+        "Guarantees cross-database atomicity",
+        "High latency overhead due to 2 network round-trips",
+        "Susceptible to indefinite lock blocking if coordinator crashes"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "REST vs GraphQL vs gRPC Protocol Data Flow",
+    "output": "high level design/04_api_design_and_gateways/rest_vs_graphql_vs_grpc/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Styles"
+    },
+    {
+      "label": "API Schema"
+    },
+    {
+      "label": "Payload Engine"
+    },
+    {
+      "label": "Microservice"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "web",
+      "type": "frontend",
+      "label": "Web & Mobile",
+      "sublabel": "Diverse clients",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "gql",
+      "type": "backend",
+      "label": "GraphQL Hub",
+      "sublabel": "Exact fields query",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "grpc",
+      "type": "backend",
+      "label": "gRPC Protobuf",
+      "sublabel": "Binary RPC contract",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "proto",
+      "type": "security",
+      "label": "Binary Frame",
+      "sublabel": "Compact bytes",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "srv",
+      "type": "database",
+      "label": "Order Service",
+      "sublabel": "Fast execution",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "web",
+      "to": "gql",
+      "label": "query { name }"
+    },
+    {
+      "from": "web",
+      "to": "grpc",
+      "label": "rpc call"
+    },
+    {
+      "from": "grpc",
+      "to": "proto",
+      "label": "serialize"
+    },
+    {
+      "from": "gql",
+      "to": "srv",
+      "label": "resolve"
+    },
+    {
+      "from": "proto",
+      "to": "srv",
+      "label": "zero overhead"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "API Paradigm Selection",
+      "items": [
+        "GraphQL eliminates mobile overfetching",
+        "gRPC delivers maximal inter-service speed",
+        "REST provides universal public API standards"
+      ]
+    }
+  ]
+}

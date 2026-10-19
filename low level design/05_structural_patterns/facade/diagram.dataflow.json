@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Order Fulfillment Facade Data Flow",
+    "output": "low level design/05_structural_patterns/facade/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "API Client"
+    },
+    {
+      "label": "Facade"
+    },
+    {
+      "label": "Inventory & Pay"
+    },
+    {
+      "label": "Shipping & Notif"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Web Client",
+      "sublabel": "place_order()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "facade",
+      "type": "backend",
+      "label": "OrderFacade",
+      "sublabel": "Unified Entrypoint",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "inv",
+      "type": "database",
+      "label": "InventoryService",
+      "sublabel": "reserve_stock()",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "pay",
+      "type": "backend",
+      "label": "PaymentService",
+      "sublabel": "process_charge()",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "log",
+      "type": "external",
+      "label": "LogisticsService",
+      "sublabel": "generate_label()",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "notif",
+      "type": "messagebus",
+      "label": "NotificationHub",
+      "sublabel": "send_receipt()",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "facade",
+      "label": "1 call"
+    },
+    {
+      "from": "facade",
+      "to": "inv",
+      "label": "reserve"
+    },
+    {
+      "from": "facade",
+      "to": "pay",
+      "label": "charge"
+    },
+    {
+      "from": "inv",
+      "to": "log",
+      "label": "book courier"
+    },
+    {
+      "from": "pay",
+      "to": "notif",
+      "label": "send receipt"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Subsystem Encapsulation",
+      "items": [
+        "Client shielded from multi-step coordination",
+        "Decouples callers from internal subsystem changes",
+        "Standard for BFF (Backend-For-Frontend) layers"
+      ]
+    }
+  ]
+}

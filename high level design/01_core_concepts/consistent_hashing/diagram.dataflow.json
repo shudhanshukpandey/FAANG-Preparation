@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Consistent Hashing Ring & Virtual Nodes Data Flow",
+    "output": "high level design/01_core_concepts/consistent_hashing/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Key Request"
+    },
+    {
+      "label": "Hash Function"
+    },
+    {
+      "label": "Ring Lookup"
+    },
+    {
+      "label": "Target Shard"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "key",
+      "type": "frontend",
+      "label": "user:94821",
+      "sublabel": "Incoming Key",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "h",
+      "type": "backend",
+      "label": "MD5 Hash",
+      "sublabel": "Maps to [0, 2^128]",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "ring",
+      "type": "backend",
+      "label": "Virtual Node Ring",
+      "sublabel": "Clockwise binary search",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "node_b",
+      "type": "database",
+      "label": "Shard B",
+      "sublabel": "Assigned target",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "key",
+      "to": "h",
+      "label": "hash(key)"
+    },
+    {
+      "from": "h",
+      "to": "ring",
+      "label": "bisect_right"
+    },
+    {
+      "from": "ring",
+      "to": "node_b",
+      "label": "route write"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Minimal Key Migration",
+      "items": [
+        "Adding a node relocates only K/N keys",
+        "Virtual nodes prevent hot spot imbalances",
+        "Foundation of DynamoDB, Cassandra, and Discord voice servers"
+      ]
+    }
+  ]
+}

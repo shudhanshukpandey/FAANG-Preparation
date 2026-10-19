@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Event Sourcing Immutable Ledger & Replay Data Flow",
+    "output": "high level design/10_architectural_patterns/event_sourcing/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Domain Command"
+    },
+    {
+      "label": "Event Store"
+    },
+    {
+      "label": "Event Replayer"
+    },
+    {
+      "label": "Materialized State"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "cmd",
+      "type": "frontend",
+      "label": "Transfer $50",
+      "sublabel": "Banking Command",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "Event Store",
+      "sublabel": "Append-only log",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "replay",
+      "type": "backend",
+      "label": "State Projector",
+      "sublabel": "Sequential replayer",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "view",
+      "type": "database",
+      "label": "Account Balance",
+      "sublabel": "Hydrated View: $120",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "cmd",
+      "to": "store",
+      "label": "append event"
+    },
+    {
+      "from": "store",
+      "to": "replay",
+      "label": "replay stream"
+    },
+    {
+      "from": "replay",
+      "to": "view",
+      "label": "project balance"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Complete Auditability",
+      "items": [
+        "Zero data loss: history is never overwritten",
+        "Enables flawless temporal debugging and retro-auditing",
+        "Rebuild read models easily when requirements evolve"
+      ]
+    }
+  ]
+}

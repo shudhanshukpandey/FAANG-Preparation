@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Keep It Simple Stupid (KISS) Direct Data Flow",
+    "output": "low level design/02_design_principles/kiss/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Input Request"
+    },
+    {
+      "label": "Clean Direct Logic"
+    },
+    {
+      "label": "Direct Result"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "Status Lookup",
+      "sublabel": "code = 200",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "dict_map",
+      "type": "backend",
+      "label": "STATUS_MAP[code]",
+      "sublabel": "O(1) Map Lookup",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "out",
+      "type": "database",
+      "label": "Result String",
+      "sublabel": "No complex visitor",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "dict_map",
+      "label": "query"
+    },
+    {
+      "from": "dict_map",
+      "to": "out",
+      "label": "instant return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Simplicity Over Complexity",
+      "items": [
+        "Prefer the simplest solution that completely solves the problem",
+        "Avoid unnecessary design patterns when a dictionary suffices",
+        "Easier to debug, maintain, and onboard new engineers"
+      ]
+    }
+  ]
+}

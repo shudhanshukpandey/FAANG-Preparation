@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Bidirectional Association Data Flow",
+    "output": "low level design/01_oop_fundamentals/association/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Student Context"
+    },
+    {
+      "label": "Association Link"
+    },
+    {
+      "label": "Course Registry"
+    },
+    {
+      "label": "Resource"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "student",
+      "type": "frontend",
+      "label": "Student Object",
+      "sublabel": "Alice (id=1)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "enroll",
+      "type": "backend",
+      "label": "enroll(course)",
+      "sublabel": "Bidirectional Pointer",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "course",
+      "type": "backend",
+      "label": "Course Object",
+      "sublabel": "CS101 Algorithms",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "res",
+      "type": "database",
+      "label": "Course Content",
+      "sublabel": "Independent Lifecycle",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "student",
+      "to": "enroll",
+      "label": "link"
+    },
+    {
+      "from": "enroll",
+      "to": "course",
+      "label": "assign"
+    },
+    {
+      "from": "course",
+      "to": "res",
+      "label": "query"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Peer-to-Peer Relationship",
+      "items": [
+        "Peer objects know about each other without ownership",
+        "Both Student and Course exist independently in heap",
+        "Deleting a Student leaves the Course completely intact"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Hierarchical DNS & Anycast Routing Data Flow",
+    "output": "high level design/02_networking_and_traffic/dns_and_anycast/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Lookup"
+    },
+    {
+      "label": "Recursive DNS"
+    },
+    {
+      "label": "DNS Hierarchy"
+    },
+    {
+      "label": "Anycast PoP"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Client Browser",
+      "sublabel": "api.faang.com",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "resolver",
+      "type": "backend",
+      "label": "Recursive DNS",
+      "sublabel": "Cache lookups",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "hierarchy",
+      "type": "security",
+      "label": "Root/TLD/Auth",
+      "sublabel": "A-Record return",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pop",
+      "type": "external",
+      "label": "Nearest Anycast",
+      "sublabel": "BGP Shortest Path",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "resolver",
+      "label": "lookup"
+    },
+    {
+      "from": "resolver",
+      "to": "hierarchy",
+      "label": "resolve"
+    },
+    {
+      "from": "hierarchy",
+      "to": "pop",
+      "label": "route edge"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Global Edge Routing",
+      "items": [
+        "Caches records with TTL expiry",
+        "Anycast routes to nearest PoP",
+        "Mitigates DDoS at edge"
+      ]
+    }
+  ]
+}

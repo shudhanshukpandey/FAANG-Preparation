@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Thread-Safe Singleton Data Flow",
+    "output": "low level design/04_creational_patterns/singleton/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Threads"
+    },
+    {
+      "label": "Instance Check"
+    },
+    {
+      "label": "Mutex Lock"
+    },
+    {
+      "label": "Singleton Pool"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "t1",
+      "type": "frontend",
+      "label": "Worker Thread 1",
+      "sublabel": "requests instance",
+      "stage": 0,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "t2",
+      "type": "frontend",
+      "label": "Worker Thread 2",
+      "sublabel": "requests instance",
+      "stage": 0,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "check1",
+      "type": "backend",
+      "label": "1st Check",
+      "sublabel": "if instance is None",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "lock",
+      "type": "security",
+      "label": "Thread Mutex",
+      "sublabel": "with cls._lock",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pool",
+      "type": "database",
+      "label": "DB Pool Instance",
+      "sublabel": "Single Instance",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "t1",
+      "to": "check1",
+      "label": "acquire"
+    },
+    {
+      "from": "t2",
+      "to": "check1",
+      "label": "acquire"
+    },
+    {
+      "from": "check1",
+      "to": "lock",
+      "label": "lock if null"
+    },
+    {
+      "from": "lock",
+      "to": "pool",
+      "label": "init once"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Double-Checked Locking",
+      "items": [
+        "1st check without lock minimizes contention",
+        "2nd check inside lock prevents race conditions",
+        "Global point of access to single resource"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Erasure Coding Parity & Reconstruction Data Flow",
+    "output": "high level design/09_storage_systems/erasure_coding/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Original File"
+    },
+    {
+      "label": "Data Splitter"
+    },
+    {
+      "label": "RS Encoder"
+    },
+    {
+      "label": "Storage Nodes"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "file",
+      "type": "frontend",
+      "label": "Object Stream",
+      "sublabel": "Input Payload",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "split",
+      "type": "backend",
+      "label": "K Data Chunks",
+      "sublabel": "4 data shards",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "coder",
+      "type": "security",
+      "label": "M Parity Chunks",
+      "sublabel": "2 parity shards",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "storage",
+      "type": "database",
+      "label": "6 Storage Racks",
+      "sublabel": "Survives 2 dead racks",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "file",
+      "to": "split",
+      "label": "divide"
+    },
+    {
+      "from": "split",
+      "to": "coder",
+      "label": "compute parity"
+    },
+    {
+      "from": "coder",
+      "to": "storage",
+      "label": "distribute 4+2"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Optimal Durability / Cost",
+      "items": [
+        "Cuts cloud storage bill by over 50% vs 3x replication",
+        "Reconstructs lost shards on the fly via matrix math",
+        "Standard for AWS S3 and Ceph storage backends"
+      ]
+    }
+  ]
+}

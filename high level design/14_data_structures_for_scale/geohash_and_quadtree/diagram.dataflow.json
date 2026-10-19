@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Geohash & Quadtree Spatial Indexing Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "GPS Coordinates"
+    },
+    {
+      "label": "Base32 Geohash"
+    },
+    {
+      "label": "Spatial Quadtree"
+    },
+    {
+      "label": "Nearest Drivers"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "gps",
+      "type": "frontend",
+      "label": "Rider GPS",
+      "sublabel": "(37.77, -122.41)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "geohash",
+      "type": "security",
+      "label": "Geohash String",
+      "sublabel": "dr5ru7",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "quad",
+      "type": "backend",
+      "label": "Quadtree Leaf",
+      "sublabel": "Prefix match box",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "drivers",
+      "type": "database",
+      "label": "Top 5 Drivers",
+      "sublabel": "Sub-10ms retrieval",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "gps",
+      "to": "geohash",
+      "label": "encode"
+    },
+    {
+      "from": "geohash",
+      "to": "quad",
+      "label": "index search"
+    },
+    {
+      "from": "quad",
+      "to": "drivers",
+      "label": "proximity sort"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Sub-10ms Geospatial Search",
+      "items": [
+        "Geohash string prefixes allow standard B-Tree index range scans",
+        "Quadtrees dynamically adjust resolution according to city density",
+        "Core architecture behind Uber, Lyft, and Yelp"
+      ]
+    }
+  ]
+}

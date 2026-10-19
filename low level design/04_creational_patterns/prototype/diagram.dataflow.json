@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Prototype Object Cloning Data Flow",
+    "output": "low level design/04_creational_patterns/prototype/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Registry"
+    },
+    {
+      "label": "Template"
+    },
+    {
+      "label": "Deep Copy"
+    },
+    {
+      "label": "Active Clones"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "reg",
+      "type": "backend",
+      "label": "UnitRegistry",
+      "sublabel": "spawn('warrior')",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "proto",
+      "type": "database",
+      "label": "Warrior Template",
+      "sublabel": "Heavy state & stats",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "copy",
+      "type": "backend",
+      "label": "copy.deepcopy()",
+      "sublabel": "clone engine",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "c1",
+      "type": "frontend",
+      "label": "Clone Unit 1",
+      "sublabel": "hp=350, Sword",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "c2",
+      "type": "frontend",
+      "label": "Clone Unit 2",
+      "sublabel": "hp=500, pristine",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "reg",
+      "to": "proto",
+      "label": "lookup"
+    },
+    {
+      "from": "proto",
+      "to": "copy",
+      "label": "clone"
+    },
+    {
+      "from": "copy",
+      "to": "c1",
+      "label": "instance 1"
+    },
+    {
+      "from": "copy",
+      "to": "c2",
+      "label": "instance 2"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Fast Object Duplication",
+      "items": [
+        "Cloning is faster than DB re-queries",
+        "Deep copy ensures nested dict independence",
+        "Used for game entities & document templates"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "B+ Tree vs LSM-Tree Storage Engine Data Flow",
+    "output": "high level design/07_database_architectures/b_plus_tree_vs_lsm_tree/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Write Stream"
+    },
+    {
+      "label": "Write-Ahead Log"
+    },
+    {
+      "label": "MemTable (RAM)"
+    },
+    {
+      "label": "SSTable (Disk)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "write",
+      "type": "frontend",
+      "label": "put(key, val)",
+      "sublabel": "Sequential write",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "wal",
+      "type": "security",
+      "label": "WAL Append",
+      "sublabel": "Sequential I/O",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "mem",
+      "type": "database",
+      "label": "MemTable (RAM)",
+      "sublabel": "Sorted skiplist/tree",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sstable",
+      "type": "database",
+      "label": "SSTable Disk",
+      "sublabel": "Immutable chunks",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "write",
+      "to": "wal",
+      "label": "append log"
+    },
+    {
+      "from": "wal",
+      "to": "mem",
+      "label": "insert memory"
+    },
+    {
+      "from": "mem",
+      "to": "sstable",
+      "label": "flush to disk"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Sequential Disk Throughput",
+      "items": [
+        "LSM eliminates random disk writes",
+        "MemTable provides O(log N) in-memory lookups",
+        "Compaction merges immutable SSTables in background"
+      ]
+    }
+  ]
+}

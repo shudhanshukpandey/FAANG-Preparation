@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Don't Repeat Yourself (DRY) Centralized Data Flow",
+    "output": "low level design/02_design_principles/dry/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Services"
+    },
+    {
+      "label": "Shared Utility"
+    },
+    {
+      "label": "Calculation"
+    },
+    {
+      "label": "Outputs"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "order",
+      "type": "frontend",
+      "label": "OrderService",
+      "sublabel": "Needs VAT calc",
+      "stage": 0,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "invoice",
+      "type": "frontend",
+      "label": "InvoiceService",
+      "sublabel": "Needs VAT calc",
+      "stage": 0,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "tax",
+      "type": "backend",
+      "label": "TaxCalculator",
+      "sublabel": "Single source of truth",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "calc",
+      "type": "backend",
+      "label": "calc_vat(18%)",
+      "sublabel": "Unified rule",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "res",
+      "type": "database",
+      "label": "Consistent Ledger",
+      "sublabel": "Identical tax rounding",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "order",
+      "to": "tax",
+      "label": "call"
+    },
+    {
+      "from": "invoice",
+      "to": "tax",
+      "label": "call"
+    },
+    {
+      "from": "tax",
+      "to": "calc",
+      "label": "execute"
+    },
+    {
+      "from": "calc",
+      "to": "res",
+      "label": "store"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Single Source of Truth",
+      "items": [
+        "Every piece of knowledge has a single unambiguous representation",
+        "Eliminates subtle bugs caused by divergent duplicate formulas",
+        "Tax rule change requires updating exactly one function"
+      ]
+    }
+  ]
+}

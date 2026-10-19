@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Distributed Tracing (OpenTelemetry) & RED Metrics Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "API Request"
+    },
+    {
+      "label": "Order Service (Span 1)"
+    },
+    {
+      "label": "Payment Service (Span 2)"
+    },
+    {
+      "label": "Jaeger Collector"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "trace_id: 101",
+      "sublabel": "HTTP Inbound",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "order",
+      "type": "backend",
+      "label": "Order Service",
+      "sublabel": "span: 1 (12ms)",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pay",
+      "type": "backend",
+      "label": "Payment Service",
+      "sublabel": "span: 2 (85ms)",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "trace_db",
+      "type": "database",
+      "label": "Jaeger Collector",
+      "sublabel": "Flame graph analysis",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "order",
+      "label": "trace id"
+    },
+    {
+      "from": "order",
+      "to": "pay",
+      "label": "propagate"
+    },
+    {
+      "from": "pay",
+      "to": "trace_db",
+      "label": "export span"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Full-Stack Observability",
+      "items": [
+        "W3C Trace Context standardizes header propagation across polyglot stacks",
+        "Pinpoints exact sub-service latency bottlenecks in complex dependency graphs",
+        "Alerts configured on RED p99 metrics rather than averages"
+      ]
+    }
+  ]
+}

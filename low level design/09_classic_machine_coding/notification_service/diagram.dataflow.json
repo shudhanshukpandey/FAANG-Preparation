@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Notification Service Hub Data Flow",
+    "output": "low level design/09_classic_machine_coding/notification_service/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Event Trigger"
+    },
+    {
+      "label": "Preferences"
+    },
+    {
+      "label": "Channel Factory"
+    },
+    {
+      "label": "External Gateway"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "event",
+      "type": "frontend",
+      "label": "Order Event",
+      "sublabel": "user_id, priority",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "prefs",
+      "type": "security",
+      "label": "Preferences",
+      "sublabel": "Opt-in / CRITICAL",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "factory",
+      "type": "backend",
+      "label": "ChannelFactory",
+      "sublabel": "Resolve driver",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "email",
+      "type": "external",
+      "label": "SendGrid Email",
+      "sublabel": "Email delivery",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "sms",
+      "type": "external",
+      "label": "Twilio SMS",
+      "sublabel": "SMS delivery",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "event",
+      "to": "prefs",
+      "label": "notify"
+    },
+    {
+      "from": "prefs",
+      "to": "factory",
+      "label": "authorized"
+    },
+    {
+      "from": "factory",
+      "to": "email",
+      "label": "send email"
+    },
+    {
+      "from": "factory",
+      "to": "sms",
+      "label": "send sms"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Multi-Channel Notification Hub",
+      "items": [
+        "Factory method resolves channel drivers",
+        "User preferences prevent unsolicited alerts",
+        "CRITICAL priority overrides marketing preferences"
+      ]
+    }
+  ]
+}

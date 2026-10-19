@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Bulkhead Isolation & Strangler Fig Migration Data Flow",
+    "output": "high level design/11_microservices_resilience/bulkhead_and_strangler_fig/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Traffic Ingress"
+    },
+    {
+      "label": "Strangler Proxy"
+    },
+    {
+      "label": "Bulkhead Pools"
+    },
+    {
+      "label": "Execution Target"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "traffic",
+      "type": "frontend",
+      "label": "API Ingress",
+      "sublabel": "Mixed requests",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "proxy",
+      "type": "security",
+      "label": "Strangler Proxy",
+      "sublabel": "Route interceptor",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "crit",
+      "type": "backend",
+      "label": "Payment Bulkhead",
+      "sublabel": "Dedicated 50 threads",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "non_crit",
+      "type": "backend",
+      "label": "Search Bulkhead",
+      "sublabel": "Dedicated 10 threads",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "target",
+      "type": "database",
+      "label": "New Microservice",
+      "sublabel": "Modern architecture",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "traffic",
+      "to": "proxy",
+      "label": "incoming"
+    },
+    {
+      "from": "proxy",
+      "to": "crit",
+      "label": "route payment"
+    },
+    {
+      "from": "proxy",
+      "to": "non_crit",
+      "label": "route search"
+    },
+    {
+      "from": "crit",
+      "to": "target",
+      "label": "guaranteed run"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Cascading Failure Shield",
+      "items": [
+        "A hang in search will never degrade critical payment flows",
+        "Strangler Fig enables risk-free migration from legacy monoliths",
+        "Resource exhaustion isolated to designated bulkhead compartment"
+      ]
+    }
+  ]
+}

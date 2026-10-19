@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Database Sharding & Partition Routing Data Flow",
+    "output": "high level design/08_database_scaling/sharding_and_partitioning/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "App Request"
+    },
+    {
+      "label": "Shard Router"
+    },
+    {
+      "label": "Hash Function"
+    },
+    {
+      "label": "Physical Shards"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "App Client",
+      "sublabel": "write(user_id, data)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "router",
+      "type": "backend",
+      "label": "Shard Router",
+      "sublabel": "Vitess / Citus",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "h",
+      "type": "security",
+      "label": "hash(key) % N",
+      "sublabel": "Routing key",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sh1",
+      "type": "database",
+      "label": "Shard 1 (0-33%)",
+      "sublabel": "Physical DB",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "sh2",
+      "type": "database",
+      "label": "Shard 2 (34-66%)",
+      "sublabel": "Physical DB",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "app",
+      "to": "router",
+      "label": "query"
+    },
+    {
+      "from": "router",
+      "to": "h",
+      "label": "compute shard"
+    },
+    {
+      "from": "h",
+      "to": "sh1",
+      "label": "route write"
+    },
+    {
+      "from": "h",
+      "to": "sh2",
+      "label": "route write"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Unlimited Horizontal Scale",
+      "items": [
+        "Distributes storage and write throughput across clusters",
+        "Eliminates single database disk exhaustion",
+        "Requires careful shard key selection to avoid celebrity hotspots"
+      ]
+    }
+  ]
+}

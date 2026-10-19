@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Primary-Replica Read Replication Data Flow",
+    "output": "high level design/08_database_scaling/read_replication/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client API"
+    },
+    {
+      "label": "Primary Master"
+    },
+    {
+      "label": "Write-Ahead Log"
+    },
+    {
+      "label": "Read Replicas"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Client App",
+      "sublabel": "write(key, val)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pri",
+      "type": "database",
+      "label": "Primary DB",
+      "sublabel": "Active writer",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "wal",
+      "type": "security",
+      "label": "Async WAL",
+      "sublabel": "Replication log",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "rep1",
+      "type": "database",
+      "label": "Replica 1",
+      "sublabel": "Read queries",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "rep2",
+      "type": "database",
+      "label": "Replica 2",
+      "sublabel": "Read queries",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "pri",
+      "label": "commit"
+    },
+    {
+      "from": "pri",
+      "to": "wal",
+      "label": "stream wal"
+    },
+    {
+      "from": "wal",
+      "to": "rep1",
+      "label": "apply log"
+    },
+    {
+      "from": "wal",
+      "to": "rep2",
+      "label": "apply log"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Scale-Out Read Capacity",
+      "items": [
+        "Replicas scale read throughput to 50k+ QPS",
+        "Primary handles exclusive atomic writes",
+        "Read-your-own-writes avoids replication lag confusion"
+      ]
+    }
+  ]
+}

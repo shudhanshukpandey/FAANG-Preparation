@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Open/Closed Principle (OCP) Extension Data Flow",
+    "output": "low level design/02_design_principles/ocp/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Checkout Context"
+    },
+    {
+      "label": "Discount Engine"
+    },
+    {
+      "label": "Strategies"
+    },
+    {
+      "label": "Total Calculation"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "cart",
+      "type": "frontend",
+      "label": "Cart Checkout",
+      "sublabel": "Total = $100",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "engine",
+      "type": "backend",
+      "label": "DiscountEngine",
+      "sublabel": "Closed for mod",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "festive",
+      "type": "backend",
+      "label": "FestiveDiscount",
+      "sublabel": "Open: 20% off",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "vip",
+      "type": "backend",
+      "label": "VIPDiscount",
+      "sublabel": "Open: 30% off",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "final_p",
+      "type": "database",
+      "label": "Final Price",
+      "sublabel": "$80 or $70",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "cart",
+      "to": "engine",
+      "label": "apply"
+    },
+    {
+      "from": "engine",
+      "to": "festive",
+      "label": "delegates"
+    },
+    {
+      "from": "engine",
+      "to": "vip",
+      "label": "delegates"
+    },
+    {
+      "from": "festive",
+      "to": "final_p",
+      "label": "applies"
+    },
+    {
+      "from": "vip",
+      "to": "final_p",
+      "label": "applies"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Open for Extension, Closed for Mod",
+      "items": [
+        "Add new promotion strategies without changing the core discount engine",
+        "Eliminates risky regressions in existing production code",
+        "Achieved via interfaces and dependency injection"
+      ]
+    }
+  ]
+}

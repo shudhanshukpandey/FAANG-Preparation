@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Class Instantiation & State Mutation Data Flow",
+    "output": "low level design/01_oop_fundamentals/classes_and_objects/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Blueprint Def"
+    },
+    {
+      "label": "Instantiation"
+    },
+    {
+      "label": "Heap Allocation"
+    },
+    {
+      "label": "Method Mutation"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "cls",
+      "type": "backend",
+      "label": "BankAccount Class",
+      "sublabel": "Class Definition",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "init",
+      "type": "backend",
+      "label": "__init__() Call",
+      "sublabel": "Constructor with args",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "heap",
+      "type": "database",
+      "label": "Instance Object",
+      "sublabel": "Unique heap id & state",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "deposit",
+      "type": "frontend",
+      "label": "deposit(500)",
+      "sublabel": "Mutates balance",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "cls",
+      "to": "init",
+      "label": "invoke"
+    },
+    {
+      "from": "init",
+      "to": "heap",
+      "label": "allocate"
+    },
+    {
+      "from": "heap",
+      "to": "deposit",
+      "label": "state change"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Object Identity & State",
+      "items": [
+        "Class acts as a reusable blueprint",
+        "Instances maintain isolated memory state",
+        "Methods operate on implicit self reference"
+      ]
+    }
+  ]
+}

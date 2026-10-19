@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Gossip Protocol & CRDT Eventual Consistency Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Local Mutation"
+    },
+    {
+      "label": "Peer Gossip"
+    },
+    {
+      "label": "Lattice Join (Merge)"
+    },
+    {
+      "label": "Converged State"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "mutate",
+      "type": "frontend",
+      "label": "Node A Counter",
+      "sublabel": "p['A'] += 1",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "gossip",
+      "type": "backend",
+      "label": "Epidemic Gossip",
+      "sublabel": "Random peer pick",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "merge",
+      "type": "security",
+      "label": "CRDT max(A, B)",
+      "sublabel": "Associative join",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "state",
+      "type": "database",
+      "label": "Replica State",
+      "sublabel": "Guaranteed identical",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "mutate",
+      "to": "gossip",
+      "label": "fanout"
+    },
+    {
+      "from": "gossip",
+      "to": "merge",
+      "label": "reconcile"
+    },
+    {
+      "from": "merge",
+      "to": "state",
+      "label": "converge"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zero-Coordination Replication",
+      "items": [
+        "CRDTs eliminate locking overhead during multi-region writes",
+        "Gossip provides self-healing cluster discovery in Cassandra and Consul",
+        "Supports collaborative editors (Google Docs, Figma)"
+      ]
+    }
+  ]
+}

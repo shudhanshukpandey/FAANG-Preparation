@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Idempotency Keys & Deduplication Data Flow",
+    "output": "high level design/04_api_design_and_gateways/idempotency_patterns/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Payment Client"
+    },
+    {
+      "label": "Idempotency Lock"
+    },
+    {
+      "label": "Deduplication Store"
+    },
+    {
+      "label": "Payment Gateway"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Checkout Client",
+      "sublabel": "Idempotency-Key",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "lock",
+      "type": "security",
+      "label": "Dedupe Lock",
+      "sublabel": "Distributed Mutex",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "cache",
+      "type": "database",
+      "label": "Response Cache",
+      "sublabel": "Cached result",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "bank",
+      "type": "external",
+      "label": "Stripe Gateway",
+      "sublabel": "Charge $150",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "lock",
+      "label": "pay $150"
+    },
+    {
+      "from": "lock",
+      "to": "cache",
+      "label": "key exists"
+    },
+    {
+      "from": "lock",
+      "to": "bank",
+      "label": "first execution"
+    },
+    {
+      "from": "bank",
+      "to": "cache",
+      "label": "save result"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zero Duplicate Billing",
+      "items": [
+        "Protects against network retry double-charges",
+        "Atomic lock prevents concurrent execution",
+        "Stores response with configurable TTL"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Transactional Outbox Pattern Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/transactional_outbox/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Order Service"
+    },
+    {
+      "label": "Local DB Transaction"
+    },
+    {
+      "label": "Outbox Relay"
+    },
+    {
+      "label": "Message Broker"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "svc",
+      "type": "frontend",
+      "label": "OrderService",
+      "sublabel": "place_order()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "order_row",
+      "type": "database",
+      "label": "Orders Table",
+      "sublabel": "INSERT order",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "outbox_row",
+      "type": "database",
+      "label": "Outbox Table",
+      "sublabel": "INSERT event (PENDING)",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "relay",
+      "type": "backend",
+      "label": "Outbox Relay Worker",
+      "sublabel": "Polls PENDING rows",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "kafka",
+      "type": "messagebus",
+      "label": "Apache Kafka",
+      "sublabel": "events.ordercreated",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "svc",
+      "to": "order_row",
+      "label": "atomic write"
+    },
+    {
+      "from": "svc",
+      "to": "outbox_row",
+      "label": "atomic write"
+    },
+    {
+      "from": "outbox_row",
+      "to": "relay",
+      "label": "poll"
+    },
+    {
+      "from": "relay",
+      "to": "kafka",
+      "label": "publish event"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Dual-Write Consistency",
+      "items": [
+        "Eliminates distributed 2PC transactions",
+        "Database and events committed atomically",
+        "Guaranteed at-least-once message delivery"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Batch vs Stream Processing Trade-Offs Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Raw Event Feed"
+    },
+    {
+      "label": "Processing Model"
+    },
+    {
+      "label": "Compute Engine"
+    },
+    {
+      "label": "Analytics Target"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "feed",
+      "type": "frontend",
+      "label": "Click Events",
+      "sublabel": "Unbounded stream",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "split",
+      "type": "backend",
+      "label": "Ingestion Gate",
+      "sublabel": "Real-time vs Hourly",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "engine",
+      "type": "security",
+      "label": "Flink / Spark",
+      "sublabel": "Windowed compute",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sink",
+      "type": "database",
+      "label": "Data Warehouse",
+      "sublabel": "Dashboard tables",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "feed",
+      "to": "split",
+      "label": "ingest"
+    },
+    {
+      "from": "split",
+      "to": "engine",
+      "label": "dispatch"
+    },
+    {
+      "from": "engine",
+      "to": "sink",
+      "label": "materialize"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Latency vs Accuracy",
+      "items": [
+        "Streaming handles fraud detection and live dashboards",
+        "Batch executes end-of-month financial reconciliation",
+        "Watermarks handle out-of-order event arrivals"
+      ]
+    }
+  ]
+}

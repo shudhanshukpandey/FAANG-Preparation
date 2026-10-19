@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Law of Demeter (LoD) Encapsulated Neighbor Data Flow",
+    "output": "low level design/02_design_principles/lod/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Caller"
+    },
+    {
+      "label": "Direct Friend"
+    },
+    {
+      "label": "Internal Neighbor"
+    },
+    {
+      "label": "Protected Secret"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Customer",
+      "sublabel": "pay_invoice(amount)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "wallet",
+      "type": "backend",
+      "label": "Wallet (Friend)",
+      "sublabel": "Direct member object",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "card",
+      "type": "backend",
+      "label": "CreditCard",
+      "sublabel": "Controlled by Wallet",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "token",
+      "type": "security",
+      "label": "CVV / Secret",
+      "sublabel": "Never exposed to Customer",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "wallet",
+      "label": "wallet.deduct()"
+    },
+    {
+      "from": "wallet",
+      "to": "card",
+      "label": "card.charge()"
+    },
+    {
+      "from": "card",
+      "to": "token",
+      "label": "sign token"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Principle of Least Knowledge",
+      "items": [
+        "Only talk to your immediate friends (no train wrecks: a.b().c().d())",
+        "Customer asks wallet to pay without handling the raw credit card",
+        "Reduces coupling across system layers"
+      ]
+    }
+  ]
+}

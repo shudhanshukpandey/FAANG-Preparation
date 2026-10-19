@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "IoC Container & Depends() Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/dependency_injection/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Route Request"
+    },
+    {
+      "label": "IoC Container"
+    },
+    {
+      "label": "Dependency Graph"
+    },
+    {
+      "label": "Resolved Controller"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "HTTP GET /users",
+      "sublabel": "FastAPI handler",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "ioc",
+      "type": "backend",
+      "label": "DIContainer",
+      "sublabel": "inspect signatures",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "cfg",
+      "type": "database",
+      "label": "AppConfig",
+      "sublabel": "Singleton",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "repo",
+      "type": "backend",
+      "label": "UserRepository",
+      "sublabel": "Injects DB",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "svc",
+      "type": "backend",
+      "label": "UserService",
+      "sublabel": "Injected into route",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "ioc",
+      "label": "Depends()"
+    },
+    {
+      "from": "ioc",
+      "to": "cfg",
+      "label": "resolve config"
+    },
+    {
+      "from": "ioc",
+      "to": "repo",
+      "label": "resolve repo"
+    },
+    {
+      "from": "repo",
+      "to": "svc",
+      "label": "build service"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Inversion of Control",
+      "items": [
+        "Components declare what they need via type hints",
+        "Container automatically wires the dependency tree",
+        "Enables seamless dependency replacement in tests"
+      ]
+    }
+  ]
+}

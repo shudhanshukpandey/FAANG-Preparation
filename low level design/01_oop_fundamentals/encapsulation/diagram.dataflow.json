@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "State Guard Encapsulation Data Flow",
+    "output": "low level design/01_oop_fundamentals/encapsulation/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "External Caller"
+    },
+    {
+      "label": "Public Accessor"
+    },
+    {
+      "label": "Invariant Guard"
+    },
+    {
+      "label": "Private State"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "caller",
+      "type": "frontend",
+      "label": "Web Client",
+      "sublabel": "account.withdraw(500)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "getter",
+      "type": "backend",
+      "label": "@property Setter",
+      "sublabel": "Public Gateway",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "guard",
+      "type": "security",
+      "label": "Validation Guard",
+      "sublabel": "amount <= balance",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "state",
+      "type": "database",
+      "label": "__balance Field",
+      "sublabel": "Mangled Private State",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "caller",
+      "to": "getter",
+      "label": "request change"
+    },
+    {
+      "from": "getter",
+      "to": "guard",
+      "label": "validate"
+    },
+    {
+      "from": "guard",
+      "to": "state",
+      "label": "guarded write"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Invariant Protection",
+      "items": [
+        "Bundles data and methods into a single protective unit",
+        "Prevents unauthorized external state corruption",
+        "Allows internal data representation to evolve safely"
+      ]
+    }
+  ]
+}

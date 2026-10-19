@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Optimistic vs Pessimistic Concurrency Data Flow",
+    "output": "low level design/08_resilience_and_concurrency/concurrency_locking/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Concurrent Buyers"
+    },
+    {
+      "label": "Locking Strategy"
+    },
+    {
+      "label": "Inventory Record"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "t1",
+      "type": "frontend",
+      "label": "Buyer A (Thread 1)",
+      "sublabel": "Reserve Seat",
+      "stage": 0,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "t2",
+      "type": "frontend",
+      "label": "Buyer B (Thread 2)",
+      "sublabel": "Reserve Seat",
+      "stage": 0,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "pess",
+      "type": "security",
+      "label": "Pessimistic Mutex",
+      "sublabel": "Exclusive row lock",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "opt",
+      "type": "backend",
+      "label": "Optimistic CAS",
+      "sublabel": "WHERE version = :v",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "seat",
+      "type": "database",
+      "label": "Seat Table",
+      "sublabel": "Stock = 1, Version = 1",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "t1",
+      "to": "pess",
+      "label": "lock mutex"
+    },
+    {
+      "from": "t2",
+      "to": "opt",
+      "label": "read v1"
+    },
+    {
+      "from": "pess",
+      "to": "seat",
+      "label": "locked write"
+    },
+    {
+      "from": "opt",
+      "to": "seat",
+      "label": "CAS write"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "Concurrency Philosophies",
+      "items": [
+        "Pessimistic: Lock row up front; blocks callers",
+        "Optimistic: Compare version on commit; retry on conflict",
+        "Crucial for ticket booking & flash sales"
+      ]
+    }
+  ]
+}

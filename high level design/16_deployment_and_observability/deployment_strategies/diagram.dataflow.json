@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Canary & Blue-Green Deployment Strategies Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "User Requests"
+    },
+    {
+      "label": "Traffic Splitter"
+    },
+    {
+      "label": "Target Versions"
+    },
+    {
+      "label": "Shared DB"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "users",
+      "type": "frontend",
+      "label": "Public Traffic",
+      "sublabel": "100k QPS",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "router",
+      "type": "security",
+      "label": "Canary Router",
+      "sublabel": "90% / 10% split",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "stable",
+      "type": "backend",
+      "label": "Stable V1 (90%)",
+      "sublabel": "Production fleet",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "canary",
+      "type": "backend",
+      "label": "Canary V2 (10%)",
+      "sublabel": "Testing fleet",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Database Cluster",
+      "sublabel": "Backward compatible",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "users",
+      "to": "router",
+      "label": "traffic"
+    },
+    {
+      "from": "router",
+      "to": "stable",
+      "label": "90% reqs"
+    },
+    {
+      "from": "router",
+      "to": "canary",
+      "label": "10% reqs"
+    },
+    {
+      "from": "stable",
+      "to": "db",
+      "label": "queries"
+    },
+    {
+      "from": "canary",
+      "to": "db",
+      "label": "queries"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zero-Downtime Rollouts",
+      "items": [
+        "Rollbacks occur in seconds without restarting containers",
+        "Automated rollbacks trigger when HTTP 5xx error rate exceeds threshold",
+        "Requires backward-compatible database schema migrations"
+      ]
+    }
+  ]
+}

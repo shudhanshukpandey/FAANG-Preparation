@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Monolith vs Microservices vs Serverless Data Flow",
+    "output": "high level design/10_architectural_patterns/monolith_vs_microservices_vs_serverless/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Traffic Source"
+    },
+    {
+      "label": "API Gateway"
+    },
+    {
+      "label": "Service Tier"
+    },
+    {
+      "label": "Databases"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Web Client",
+      "sublabel": "Public requests",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "gw",
+      "type": "security",
+      "label": "API Gateway",
+      "sublabel": "Route dispatch",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "orders",
+      "type": "backend",
+      "label": "Order Service",
+      "sublabel": "Docker Container",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "fn",
+      "type": "backend",
+      "label": "Serverless Auth",
+      "sublabel": "AWS Lambda",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Service DB",
+      "sublabel": "Isolated schema",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "gw",
+      "label": "inbound"
+    },
+    {
+      "from": "gw",
+      "to": "orders",
+      "label": "http/grpc"
+    },
+    {
+      "from": "gw",
+      "to": "fn",
+      "label": "invoke"
+    },
+    {
+      "from": "orders",
+      "to": "db",
+      "label": "persist"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Architectural Trade-Offs",
+      "items": [
+        "Microservices enable independent deployment cycles",
+        "Serverless scales down to zero cost during idle periods",
+        "Monoliths remain ideal for early-stage zero-latency MVPs"
+      ]
+    }
+  ]
+}

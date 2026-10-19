@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Latency Percentiles & Little's Law Data Flow",
+    "output": "high level design/01_core_concepts/latency_throughput_bandwidth/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Arrival Rate \u03bb"
+    },
+    {
+      "label": "Queue Buffer"
+    },
+    {
+      "label": "Thread Pool (L)"
+    },
+    {
+      "label": "Response (W)"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "arr",
+      "type": "frontend",
+      "label": "Arrival (\u03bb)",
+      "sublabel": "5,000 QPS",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "q",
+      "type": "backend",
+      "label": "Queue Buffer",
+      "sublabel": "Backpressure gate",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pool",
+      "type": "backend",
+      "label": "In-Flight (L)",
+      "sublabel": "1,000 workers",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "resp",
+      "type": "database",
+      "label": "Latency (W)",
+      "sublabel": "200ms avg | p99 450ms",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "arr",
+      "to": "q",
+      "label": "enqueue"
+    },
+    {
+      "from": "q",
+      "to": "pool",
+      "label": "lease thread"
+    },
+    {
+      "from": "pool",
+      "to": "resp",
+      "label": "complete"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Little's Law Equilibrium",
+      "items": [
+        "Concurrency = Throughput * Latency (L = \u03bb * W)",
+        "Queue buffers absorb temporary traffic micro-bursts",
+        "Tail latency (p99) dictates user-perceived SLA"
+      ]
+    }
+  ]
+}

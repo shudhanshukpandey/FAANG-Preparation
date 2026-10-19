@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Token Bucket Rate Limiter Data Flow",
+    "output": "low level design/08_resilience_and_concurrency/rate_limiter/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Traffic Source"
+    },
+    {
+      "label": "Refill Timer"
+    },
+    {
+      "label": "Token Bucket"
+    },
+    {
+      "label": "Traffic Gate"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "Inbound Traffic",
+      "sublabel": "Burst of requests",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "refill",
+      "type": "backend",
+      "label": "Refill Timer",
+      "sublabel": "+1 token / sec",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "bucket",
+      "type": "database",
+      "label": "Token Bucket",
+      "sublabel": "Capacity = 3",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "allow",
+      "type": "security",
+      "label": "200 Forwarded",
+      "sublabel": "Token consumed",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "deny",
+      "type": "security",
+      "label": "429 Rate Limited",
+      "sublabel": "Bucket empty",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "refill",
+      "label": "request"
+    },
+    {
+      "from": "refill",
+      "to": "bucket",
+      "label": "evaluate"
+    },
+    {
+      "from": "bucket",
+      "to": "allow",
+      "label": "tokens >= 1"
+    },
+    {
+      "from": "bucket",
+      "to": "deny",
+      "label": "tokens == 0"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Token Bucket Algorithm",
+      "items": [
+        "Allows sudden bursts up to max capacity",
+        "Smooth refill rate over time",
+        "Thread-safe mutex synchronization"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Distributed Task Scheduler Data Flow",
+    "output": "low level design/09_classic_machine_coding/distributed_task_scheduler/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Task Producer"
+    },
+    {
+      "label": "Priority Heap"
+    },
+    {
+      "label": "Worker Execution"
+    },
+    {
+      "label": "Result or DLQ"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prod",
+      "type": "frontend",
+      "label": "Task Producer",
+      "sublabel": "schedule(run_at)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "heap",
+      "type": "database",
+      "label": "Priority Queue",
+      "sublabel": "Heap ordered by time",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "worker",
+      "type": "backend",
+      "label": "Worker Thread",
+      "sublabel": "Lease lock & run",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "dlq",
+      "type": "security",
+      "label": "Dead Letter Queue",
+      "sublabel": "Exhausted retries",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "done",
+      "type": "database",
+      "label": "Completed Store",
+      "sublabel": "Task successful",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "prod",
+      "to": "heap",
+      "label": "push task"
+    },
+    {
+      "from": "heap",
+      "to": "worker",
+      "label": "lease task"
+    },
+    {
+      "from": "worker",
+      "to": "dlq",
+      "label": "max failures"
+    },
+    {
+      "from": "worker",
+      "to": "done",
+      "label": "completed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Resilient Job Scheduling",
+      "items": [
+        "O(log N) timestamp-ordered priority queue",
+        "Worker lease lock prevents duplicate execution",
+        "Exponential backoff with DLQ quarantine"
+      ]
+    }
+  ]
+}

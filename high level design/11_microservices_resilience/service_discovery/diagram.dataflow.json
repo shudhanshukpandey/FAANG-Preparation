@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Service Discovery & Registry Data Flow",
+    "output": "high level design/11_microservices_resilience/service_discovery/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "New Pod Spun"
+    },
+    {
+      "label": "Service Registry"
+    },
+    {
+      "label": "Client Service"
+    },
+    {
+      "label": "Target Pod"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "pod",
+      "type": "backend",
+      "label": "Order Pod #3",
+      "sublabel": "IP 10.0.1.42:8080",
+      "stage": 0,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "reg",
+      "type": "database",
+      "label": "Consul Registry",
+      "sublabel": "Dynamic IP table",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "API Gateway",
+      "sublabel": "discover('orders')",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "target",
+      "type": "backend",
+      "label": "Order Pod #3",
+      "sublabel": "Direct RPC",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "pod",
+      "to": "reg",
+      "label": "register + heartbeat"
+    },
+    {
+      "from": "client",
+      "to": "reg",
+      "label": "query instances"
+    },
+    {
+      "from": "client",
+      "to": "target",
+      "label": "direct call"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Dynamic Elastic Routing",
+      "items": [
+        "Eliminates hardcoded IP configs in microservices",
+        "Automatic deregistration when node misses heartbeats",
+        "Supports client-side round-robin load balancing"
+      ]
+    }
+  ]
+}

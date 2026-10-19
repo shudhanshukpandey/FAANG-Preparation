@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Ride-Sharing Proximity & Surge Data Flow",
+    "output": "low level design/09_classic_machine_coding/cab_booking_uber/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Rider Request"
+    },
+    {
+      "label": "Surge Calculator"
+    },
+    {
+      "label": "Spatial Matching"
+    },
+    {
+      "label": "Assigned Driver"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "rider",
+      "type": "frontend",
+      "label": "Rider Alice",
+      "sublabel": "Request ride to (5,5)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "surge",
+      "type": "backend",
+      "label": "Surge Engine",
+      "sublabel": "Demand / Drivers ratio",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "matcher",
+      "type": "backend",
+      "label": "Spatial Matcher",
+      "sublabel": "Euclidean radius search",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "driver",
+      "type": "external",
+      "label": "Driver Bob",
+      "sublabel": "Nearest available",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "rider",
+      "to": "surge",
+      "label": "request"
+    },
+    {
+      "from": "surge",
+      "to": "matcher",
+      "label": "price computed"
+    },
+    {
+      "from": "matcher",
+      "to": "driver",
+      "label": "assign trip"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Real-Time Ride Dispatch",
+      "items": [
+        "Dynamic surge pricing balances market supply",
+        "Proximity search filters available drivers",
+        "Strict trip state machine coordinates lifecycle"
+      ]
+    }
+  ]
+}

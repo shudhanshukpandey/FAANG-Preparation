@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Distributed Locks & Fencing Tokens Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Worker Leases"
+    },
+    {
+      "label": "Lock Coordinator"
+    },
+    {
+      "label": "Fencing Engine"
+    },
+    {
+      "label": "Durable Storage"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "worker",
+      "type": "frontend",
+      "label": "Worker Process",
+      "sublabel": "acquire_lock()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "redis",
+      "type": "backend",
+      "label": "Redis / Chubby",
+      "sublabel": "SET NX PX 5000",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "fence",
+      "type": "security",
+      "label": "Fencing Token",
+      "sublabel": "Monotonic #42",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Database Engine",
+      "sublabel": "Reject tokens < 42",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "worker",
+      "to": "redis",
+      "label": "acquire lock"
+    },
+    {
+      "from": "redis",
+      "to": "fence",
+      "label": "grant lease"
+    },
+    {
+      "from": "fence",
+      "to": "db",
+      "label": "safe write"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zombie Process Protection",
+      "items": [
+        "Fencing tokens prevent stale writes after stop-the-world GC pauses",
+        "TTL ensures crash liveness without permanent resource deadlocks",
+        "Zookeeper ephemeral nodes and Redis SET NX are primary backends"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Parking Lot System Data Flow",
+    "output": "low level design/09_classic_machine_coding/parking_lot/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Arrival / Vehicle"
+    },
+    {
+      "label": "Parking Lot Controller"
+    },
+    {
+      "label": "Spot Allocation"
+    },
+    {
+      "label": "Fee & Exit"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "car",
+      "type": "frontend",
+      "label": "Vehicle (Car/Bike)",
+      "sublabel": "Enters gate",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "lot",
+      "type": "backend",
+      "label": "ParkingLot",
+      "sublabel": "Issues Ticket",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "spots",
+      "type": "database",
+      "label": "Spot Allocator",
+      "sublabel": "Compact / Large / Bike",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "fee",
+      "type": "backend",
+      "label": "FeeStrategy",
+      "sublabel": "Hourly Rate Calculation",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "exit",
+      "type": "external",
+      "label": "Exit Barrier",
+      "sublabel": "Vacates spot & collects fee",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "car",
+      "to": "lot",
+      "label": "park_vehicle()"
+    },
+    {
+      "from": "lot",
+      "to": "spots",
+      "label": "assign spot"
+    },
+    {
+      "from": "lot",
+      "to": "fee",
+      "label": "calc fee"
+    },
+    {
+      "from": "fee",
+      "to": "exit",
+      "label": "unpark()"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Machine Coding Composition",
+      "items": [
+        "Strategy pattern for fee & spot allocation",
+        "Vehicle & Spot type compatibility checks",
+        "Real-time occupancy tracking"
+      ]
+    }
+  ]
+}

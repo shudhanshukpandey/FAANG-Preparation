@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Middleware Filter Chain Data Flow",
+    "output": "low level design/06_behavioral_patterns/chain_of_responsibility/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Inbound HTTP"
+    },
+    {
+      "label": "Auth Filter"
+    },
+    {
+      "label": "Rate Limit Filter"
+    },
+    {
+      "label": "Target Handler"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "HTTP Request",
+      "sublabel": "JWT + IP",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "auth",
+      "type": "security",
+      "label": "AuthHandler",
+      "sublabel": "Token validation",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "rate",
+      "type": "backend",
+      "label": "RateLimitHandler",
+      "sublabel": "Check threshold",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "api",
+      "type": "database",
+      "label": "API Controller",
+      "sublabel": "Business execution",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "auth",
+      "label": "handle()"
+    },
+    {
+      "from": "auth",
+      "to": "rate",
+      "label": "valid token"
+    },
+    {
+      "from": "rate",
+      "to": "api",
+      "label": "valid rate"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Sequential Pipeline",
+      "items": [
+        "Handlers linked via next_handler pointer",
+        "Any handler can terminate chain early with error (401, 429)",
+        "Basis of FastAPI/Django middleware"
+      ]
+    }
+  ]
+}

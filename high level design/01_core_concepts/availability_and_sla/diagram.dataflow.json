@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "High Availability & Redundancy Math Data Flow",
+    "output": "high level design/01_core_concepts/availability_and_sla/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Traffic Source"
+    },
+    {
+      "label": "Primary Gateway"
+    },
+    {
+      "label": "Failover Secondary"
+    },
+    {
+      "label": "High-Avail Store"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Client Traffic",
+      "sublabel": "99.999% SLO contract",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pri",
+      "type": "security",
+      "label": "Primary Zone A",
+      "sublabel": "Active (99.9%)",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "sec",
+      "type": "security",
+      "label": "Standby Zone B",
+      "sublabel": "Hot Standby (99.9%)",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "sync",
+      "type": "backend",
+      "label": "Health Probe",
+      "sublabel": "Heartbeat check",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "Multi-AZ DB",
+      "sublabel": "Synchronous standby",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "pri",
+      "label": "normal path"
+    },
+    {
+      "from": "client",
+      "to": "sec",
+      "label": "failover path"
+    },
+    {
+      "from": "pri",
+      "to": "sync",
+      "label": "heartbeat"
+    },
+    {
+      "from": "sec",
+      "to": "sync",
+      "label": "standby sync"
+    },
+    {
+      "from": "sync",
+      "to": "db",
+      "label": "quorate write"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Parallel Availability Math",
+      "items": [
+        "Two 99.9% redundant nodes yield 99.999% combined availability",
+        "Heartbeat probe triggers sub-second VIP failover",
+        "Multi-AZ synchronous replication eliminates data loss"
+      ]
+    }
+  ]
+}

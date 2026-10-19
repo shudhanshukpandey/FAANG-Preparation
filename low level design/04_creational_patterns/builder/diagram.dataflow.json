@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "HTTP Request Builder Data Flow",
+    "output": "low level design/04_creational_patterns/builder/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Setup"
+    },
+    {
+      "label": "Builder Config"
+    },
+    {
+      "label": "Payload Assembly"
+    },
+    {
+      "label": "Sealed Request"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "API Client",
+      "sublabel": "HTTPRequestBuilder()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "cfg",
+      "type": "backend",
+      "label": "URL & Headers",
+      "sublabel": "set_url()",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "body",
+      "type": "backend",
+      "label": "JSON Payload",
+      "sublabel": "set_json_body()",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "req",
+      "type": "messagebus",
+      "label": "Sealed HTTPRequest",
+      "sublabel": "build() validated",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "cfg",
+      "label": "configure URL"
+    },
+    {
+      "from": "cfg",
+      "to": "body",
+      "label": "attach body"
+    },
+    {
+      "from": "body",
+      "to": "req",
+      "label": "build()"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Fluent Construction",
+      "items": [
+        "Step-by-step object configuration",
+        "Eliminates telescoping constructors",
+        "Validates invariants upon build()"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Load Balancing Algorithms Data Flow",
+    "output": "high level design/03_load_balancing/load_balancing_algorithms/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Traffic Stream"
+    },
+    {
+      "label": "Load Balancer"
+    },
+    {
+      "label": "Algorithm"
+    },
+    {
+      "label": "Backend Servers"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "traffic",
+      "type": "frontend",
+      "label": "HTTP Ingress",
+      "sublabel": "10,000 QPS",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "lb",
+      "type": "security",
+      "label": "NGINX / ALB",
+      "sublabel": "Layer 7 Balancer",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "algo",
+      "type": "backend",
+      "label": "Least Conns",
+      "sublabel": "Active sockets",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "s1",
+      "type": "backend",
+      "label": "Worker 1 (Busy)",
+      "sublabel": "45 connections",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "s2",
+      "type": "backend",
+      "label": "Worker 2 (Idle)",
+      "sublabel": "2 connections",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "traffic",
+      "to": "lb",
+      "label": "inbound"
+    },
+    {
+      "from": "lb",
+      "to": "algo",
+      "label": "evaluate"
+    },
+    {
+      "from": "algo",
+      "to": "s2",
+      "label": "route idle"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Dynamic Routing",
+      "items": [
+        "Least connections balances long sockets",
+        "Round robin delivers fair distribution",
+        "Session affinity via IP hash"
+      ]
+    }
+  ]
+}

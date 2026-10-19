@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "TCP vs UDP Transport Protocols Data Flow",
+    "output": "high level design/02_networking_and_traffic/tcp_vs_udp/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client App"
+    },
+    {
+      "label": "Handshake"
+    },
+    {
+      "label": "Transport"
+    },
+    {
+      "label": "Receiver Buffer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Web Client",
+      "sublabel": "connect()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "syn",
+      "type": "security",
+      "label": "SYN / ACK",
+      "sublabel": "3-way handshake",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "tcp",
+      "type": "backend",
+      "label": "TCP Stream",
+      "sublabel": "Ordered bytes",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "udp",
+      "type": "backend",
+      "label": "UDP Datagram",
+      "sublabel": "Fire-and-forget",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "buf",
+      "type": "database",
+      "label": "In-Order Buffer",
+      "sublabel": "Reorders packets",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "app",
+      "to": "syn",
+      "label": "initiate"
+    },
+    {
+      "from": "syn",
+      "to": "tcp",
+      "label": "established"
+    },
+    {
+      "from": "syn",
+      "to": "udp",
+      "label": "direct"
+    },
+    {
+      "from": "tcp",
+      "to": "buf",
+      "label": "ordered write"
+    },
+    {
+      "from": "udp",
+      "to": "buf",
+      "label": "loss-tolerant"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Transport Architecture",
+      "items": [
+        "TCP ensures zero packet loss",
+        "UDP optimizes for low latency",
+        "HTTP/3 runs QUIC over UDP"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Single Responsibility Principle (SRP) Separation Data Flow",
+    "output": "low level design/02_design_principles/srp/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Order Event"
+    },
+    {
+      "label": "Order Entity"
+    },
+    {
+      "label": "Specialized Services"
+    },
+    {
+      "label": "Destinations"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "event",
+      "type": "frontend",
+      "label": "Place Order",
+      "sublabel": "Cart checkout",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "order",
+      "type": "backend",
+      "label": "Order Aggregate",
+      "sublabel": "Only business logic",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "repo",
+      "type": "database",
+      "label": "OrderRepository",
+      "sublabel": "Only DB persistence",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "notifier",
+      "type": "messagebus",
+      "label": "EmailNotifier",
+      "sublabel": "Only notifications",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "PostgreSQL DB",
+      "sublabel": "SQL Rows",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "inbox",
+      "type": "external",
+      "label": "User Inbox",
+      "sublabel": "HTML Receipt",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "event",
+      "to": "order",
+      "label": "create"
+    },
+    {
+      "from": "order",
+      "to": "repo",
+      "label": "save()"
+    },
+    {
+      "from": "order",
+      "to": "notifier",
+      "label": "notify()"
+    },
+    {
+      "from": "repo",
+      "to": "db",
+      "label": "insert"
+    },
+    {
+      "from": "notifier",
+      "to": "inbox",
+      "label": "send"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "One Reason to Change",
+      "items": [
+        "A class should have one, and only one, reason to change",
+        "Separates domain rules from persistence and notification infrastructure",
+        "Changes to email template never affect SQL schema"
+      ]
+    }
+  ]
+}

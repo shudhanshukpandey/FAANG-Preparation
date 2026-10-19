@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Cache-Aside, Write-Through & Write-Behind Data Flow",
+    "output": "high level design/06_caching_strategies/caching_patterns/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "App Service"
+    },
+    {
+      "label": "Cache Layer"
+    },
+    {
+      "label": "Database Engine"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "App Service",
+      "sublabel": "get_user(1)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "cache",
+      "type": "database",
+      "label": "Redis Cache",
+      "sublabel": "In-Memory Store",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "PostgreSQL DB",
+      "sublabel": "Persistent Storage",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "app",
+      "to": "cache",
+      "label": "check cache"
+    },
+    {
+      "from": "cache",
+      "to": "db",
+      "label": "query miss"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Sub-Millisecond Read Speeds",
+      "items": [
+        "Cache-aside only loads active requested keys",
+        "Write-behind minimizes write I/O on disk",
+        "Eviction ensures cache bounded by memory limit"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Payment Strategy Data Flow",
+    "output": "low level design/06_behavioral_patterns/strategy/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Checkout Cart"
+    },
+    {
+      "label": "Strategy Context"
+    },
+    {
+      "label": "Selected Algorithm"
+    },
+    {
+      "label": "Payment Gateways"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "cart",
+      "type": "frontend",
+      "label": "Shopping Cart",
+      "sublabel": "checkout($120)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "ctx",
+      "type": "backend",
+      "label": "CheckoutContext",
+      "sublabel": "set_strategy()",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "upi",
+      "type": "backend",
+      "label": "UPI Strategy",
+      "sublabel": "VPA validation",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "card",
+      "type": "backend",
+      "label": "Credit Card",
+      "sublabel": "CVV validation",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "net_upi",
+      "type": "external",
+      "label": "UPI Gateway",
+      "sublabel": "NPCI settle",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "net_card",
+      "type": "external",
+      "label": "Card Network",
+      "sublabel": "Visa/MC settle",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "cart",
+      "to": "ctx",
+      "label": "trigger"
+    },
+    {
+      "from": "ctx",
+      "to": "upi",
+      "label": "select UPI"
+    },
+    {
+      "from": "ctx",
+      "to": "card",
+      "label": "select Card"
+    },
+    {
+      "from": "upi",
+      "to": "net_upi",
+      "label": "settle upi"
+    },
+    {
+      "from": "card",
+      "to": "net_card",
+      "label": "settle card"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Runtime Interchangeability",
+      "items": [
+        "Algorithms encapsulated into separate classes",
+        "Client can switch strategies without code changes",
+        "Eliminates if/elif branching"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Information Hiding & Abstraction Data Flow",
+    "output": "low level design/01_oop_fundamentals/abstraction/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "API Consumer"
+    },
+    {
+      "label": "Abstract Surface"
+    },
+    {
+      "label": "Internal Driver"
+    },
+    {
+      "label": "Hardware IO"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "caller",
+      "type": "frontend",
+      "label": "Application Code",
+      "sublabel": "printer.print(doc)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "abc",
+      "type": "backend",
+      "label": "PrinterInterface",
+      "sublabel": "Simple 1-method API",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "complex",
+      "type": "backend",
+      "label": "Driver Logic",
+      "sublabel": "Color calibration & buffer",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "hw",
+      "type": "external",
+      "label": "Hardware Head",
+      "sublabel": "Raw byte stream",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "caller",
+      "to": "abc",
+      "label": "simple call"
+    },
+    {
+      "from": "abc",
+      "to": "complex",
+      "label": "translates"
+    },
+    {
+      "from": "complex",
+      "to": "hw",
+      "label": "io stream"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Complexity Shielding",
+      "items": [
+        "Exposes essential features while hiding implementation guts",
+        "Callers depend on simple high-level conceptual model",
+        "Implementation details can refactor without breaking consumers"
+      ]
+    }
+  ]
+}

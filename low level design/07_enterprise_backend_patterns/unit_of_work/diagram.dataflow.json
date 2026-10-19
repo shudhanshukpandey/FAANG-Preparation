@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Unit of Work (UoW) Transaction Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/unit_of_work/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Service Layer"
+    },
+    {
+      "label": "with uow: Context"
+    },
+    {
+      "label": "Staged Repositories"
+    },
+    {
+      "label": "Atomic Persistence"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "svc",
+      "type": "frontend",
+      "label": "TransferService",
+      "sublabel": "transfer_funds()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "uow",
+      "type": "backend",
+      "label": "UnitOfWork Context",
+      "sublabel": "BEGIN TRANSACTION;",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "acc",
+      "type": "backend",
+      "label": "uow.accounts",
+      "sublabel": "Staged Balances",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "log",
+      "type": "backend",
+      "label": "uow.audit_logs",
+      "sublabel": "Staged Audit Row",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "PostgreSQL DB",
+      "sublabel": "uow.commit() / rollback()",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "svc",
+      "to": "uow",
+      "label": "enter context"
+    },
+    {
+      "from": "uow",
+      "to": "acc",
+      "label": "stage balances"
+    },
+    {
+      "from": "uow",
+      "to": "log",
+      "label": "stage audit"
+    },
+    {
+      "from": "uow",
+      "to": "db",
+      "label": "atomic COMMIT"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Atomic Consistency",
+      "items": [
+        "Coordinates multiple repositories in one atomic transaction",
+        "Automatic rollback on exception or omitted commit",
+        "Zero partial writes on failure"
+      ]
+    }
+  ]
+}

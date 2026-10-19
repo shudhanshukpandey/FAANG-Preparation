@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "DTO Boundary & Value Objects Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/dto_and_value_objects/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Untrusted JSON"
+    },
+    {
+      "label": "DTO Sanitization"
+    },
+    {
+      "label": "Value Objects"
+    },
+    {
+      "label": "Domain Entity"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "json",
+      "type": "frontend",
+      "label": "Raw HTTP JSON",
+      "sublabel": "Contains malicious field",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "dto",
+      "type": "security",
+      "label": "UserRegistrationDTO",
+      "sublabel": "Whitelist only",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "email",
+      "type": "backend",
+      "label": "EmailAddress (VO)",
+      "sublabel": "Regex validation",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "money",
+      "type": "backend",
+      "label": "Money (VO)",
+      "sublabel": "Immutable amount/curr",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "user",
+      "type": "database",
+      "label": "UserDomainEntity",
+      "sublabel": "Secure Domain Model",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "json",
+      "to": "dto",
+      "label": "filter"
+    },
+    {
+      "from": "dto",
+      "to": "email",
+      "label": "validate"
+    },
+    {
+      "from": "dto",
+      "to": "money",
+      "label": "validate"
+    },
+    {
+      "from": "email",
+      "to": "user",
+      "label": "assemble"
+    },
+    {
+      "from": "money",
+      "to": "user",
+      "label": "assemble"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Boundary Protection",
+      "items": [
+        "DTO stops mass assignment vulnerabilities",
+        "Value Objects encapsulate domain invariant rules",
+        "Decouples API schemas from internal DB tables"
+      ]
+    }
+  ]
+}

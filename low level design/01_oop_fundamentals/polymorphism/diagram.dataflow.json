@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Dynamic Polymorphic Dispatch Data Flow",
+    "output": "low level design/01_oop_fundamentals/polymorphism/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Loop"
+    },
+    {
+      "label": "Base Interface"
+    },
+    {
+      "label": "Dynamic Dispatch"
+    },
+    {
+      "label": "Calculation"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "loop",
+      "type": "frontend",
+      "label": "Shape Pipeline",
+      "sublabel": "for s in shapes:",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "base",
+      "type": "backend",
+      "label": "Shape Contract",
+      "sublabel": "calculate_area()",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "circle",
+      "type": "backend",
+      "label": "Circle",
+      "sublabel": "pi * r^2",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "square",
+      "type": "backend",
+      "label": "Square",
+      "sublabel": "w * h",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "out",
+      "type": "database",
+      "label": "Total Area Store",
+      "sublabel": "Aggregated area",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "loop",
+      "to": "base",
+      "label": "uniform call"
+    },
+    {
+      "from": "base",
+      "to": "circle",
+      "label": "dispatches"
+    },
+    {
+      "from": "base",
+      "to": "square",
+      "label": "dispatches"
+    },
+    {
+      "from": "circle",
+      "to": "out",
+      "label": "sum circle"
+    },
+    {
+      "from": "square",
+      "to": "out",
+      "label": "sum square"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Many Forms Execution",
+      "items": [
+        "Single interface method behaves differently depending on receiver",
+        "Eliminates type-checking isinstance() conditional ladders",
+        "Open to new shapes without touching caller loop"
+      ]
+    }
+  ]
+}

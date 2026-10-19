@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Pub/Sub Broadcasting & Dead Letter Queue Data Flow",
+    "output": "high level design/05_communication_patterns/pub_sub_and_dlq/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Event Publisher"
+    },
+    {
+      "label": "Topic Fan-Out"
+    },
+    {
+      "label": "Subscribers"
+    },
+    {
+      "label": "Dead Letter Queue"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "pub",
+      "type": "frontend",
+      "label": "Order Service",
+      "sublabel": "publish(OrderPlaced)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "topic",
+      "type": "messagebus",
+      "label": "Kafka Topic",
+      "sublabel": "Broadcast fan-out",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "email",
+      "type": "backend",
+      "label": "Email Worker",
+      "sublabel": "Sends receipt",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "inv",
+      "type": "backend",
+      "label": "Inventory Worker",
+      "sublabel": "Deducts stock",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "dlq",
+      "type": "security",
+      "label": "Dead Letter Queue",
+      "sublabel": "Quarantined errors",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "pub",
+      "to": "topic",
+      "label": "publish"
+    },
+    {
+      "from": "topic",
+      "to": "email",
+      "label": "fan out"
+    },
+    {
+      "from": "topic",
+      "to": "inv",
+      "label": "fan out"
+    },
+    {
+      "from": "inv",
+      "to": "dlq",
+      "label": "max retries"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Fault-Tolerant Fan-Out",
+      "items": [
+        "Decouples event producer from multiple consumers",
+        "Consumers process at their own independent speed",
+        "DLQ isolates poisonous messages"
+      ]
+    }
+  ]
+}

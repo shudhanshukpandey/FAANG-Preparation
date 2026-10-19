@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Raft Distributed Consensus & Log Replication Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Command"
+    },
+    {
+      "label": "Raft Leader"
+    },
+    {
+      "label": "Follower Quorum"
+    },
+    {
+      "label": "State Machine"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Client Request",
+      "sublabel": "write(x = 10)",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "leader",
+      "type": "backend",
+      "label": "Raft Leader",
+      "sublabel": "Append to WAL",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "foll",
+      "type": "database",
+      "label": "Followers (N=3)",
+      "sublabel": "AppendEntries RPC",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sm",
+      "type": "security",
+      "label": "State Machine",
+      "sublabel": "Commit and apply",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "leader",
+      "label": "propose"
+    },
+    {
+      "from": "leader",
+      "to": "foll",
+      "label": "replicate"
+    },
+    {
+      "from": "foll",
+      "to": "sm",
+      "label": "commit"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Provable Consensus",
+      "items": [
+        "Guarantees total log equivalence across all non-faulty nodes",
+        "Used by etcd (Kubernetes), CockroachDB, and TiKV",
+        "Elects leader through randomized heartbeat election timers"
+      ]
+    }
+  ]
+}

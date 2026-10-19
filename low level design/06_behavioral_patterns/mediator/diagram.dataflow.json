@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Chat Room Mediator Data Flow",
+    "output": "low level design/06_behavioral_patterns/mediator/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Sender User"
+    },
+    {
+      "label": "Central Mediator"
+    },
+    {
+      "label": "Broadcast Engine"
+    },
+    {
+      "label": "Recipient Users"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sender",
+      "type": "frontend",
+      "label": "Alice",
+      "sublabel": "send('Hello team')",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "hub",
+      "type": "backend",
+      "label": "ChatRoomMediator",
+      "sublabel": "Central Hub",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "dist",
+      "type": "messagebus",
+      "label": "Fanout Routing",
+      "sublabel": "exclude sender",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "bob",
+      "type": "frontend",
+      "label": "Bob",
+      "sublabel": "receive()",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "charlie",
+      "type": "frontend",
+      "label": "Charlie",
+      "sublabel": "receive()",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "sender",
+      "to": "hub",
+      "label": "send"
+    },
+    {
+      "from": "hub",
+      "to": "dist",
+      "label": "route"
+    },
+    {
+      "from": "dist",
+      "to": "bob",
+      "label": "deliver"
+    },
+    {
+      "from": "dist",
+      "to": "charlie",
+      "label": "deliver"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Star Topology",
+      "items": [
+        "Replaces chaotic O(N^2) mesh with O(N) hub",
+        "Colleagues do not reference each other",
+        "Simplifies multi-user coordination"
+      ]
+    }
+  ]
+}

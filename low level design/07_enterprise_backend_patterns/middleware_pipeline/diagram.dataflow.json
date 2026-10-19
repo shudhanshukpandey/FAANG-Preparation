@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "ASGI/WSGI Onion Middleware Pipeline Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/middleware_pipeline/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Inbound Request"
+    },
+    {
+      "label": "Outer Middleware"
+    },
+    {
+      "label": "Inner Middleware"
+    },
+    {
+      "label": "Route Handler"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "HTTP Request",
+      "sublabel": "POST /profile",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "trace",
+      "type": "backend",
+      "label": "Tracing MW",
+      "sublabel": "attach X-Request-ID",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "time_mw",
+      "type": "backend",
+      "label": "Timing MW",
+      "sublabel": "start / stop timer",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "api",
+      "type": "database",
+      "label": "API Endpoint",
+      "sublabel": "Business Logic Handler",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "trace",
+      "label": "inbound"
+    },
+    {
+      "from": "trace",
+      "to": "time_mw",
+      "label": "timing"
+    },
+    {
+      "from": "time_mw",
+      "to": "api",
+      "label": "execute"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Onion Request/Response Wrapping",
+      "items": [
+        "Cross-cutting concerns handled transparently",
+        "Outbound response flows backward through wrappers",
+        "Used by FastAPI, Django, and Flask"
+      ]
+    }
+  ]
+}

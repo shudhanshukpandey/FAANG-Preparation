@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Bloom Filter Probabilistic Set Membership Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Lookup Key"
+    },
+    {
+      "label": "Multi-Hash Engine"
+    },
+    {
+      "label": "Bitset Array"
+    },
+    {
+      "label": "Disk Query"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "query",
+      "type": "frontend",
+      "label": "GET key",
+      "sublabel": "alice@email",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "hashes",
+      "type": "security",
+      "label": "Hash k1, k2, k3",
+      "sublabel": "MD5, SHA256",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "bits",
+      "type": "backend",
+      "label": "Bloom Bit Array",
+      "sublabel": "Bits [1, 1, 0]",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "disk",
+      "type": "database",
+      "label": "Disk SSTable",
+      "sublabel": "Bypassed on 0",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "query",
+      "to": "hashes",
+      "label": "hash"
+    },
+    {
+      "from": "hashes",
+      "to": "bits",
+      "label": "check bits"
+    },
+    {
+      "from": "bits",
+      "to": "disk",
+      "label": "disk fetch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Disk I/O Bypass",
+      "items": [
+        "Saves 99% of costly random disk reads for non-existent keys",
+        "Used in Cassandra, RocksDB, Google Bigtable, and Chrome URL checker",
+        "Cuckoo filter variant supports item deletion"
+      ]
+    }
+  ]
+}

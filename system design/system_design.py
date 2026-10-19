@@ -1,1 +1,0 @@
-# gfg_link:- https://www.geeksforgeeks.org/system-design/getting-started-with-system-design/

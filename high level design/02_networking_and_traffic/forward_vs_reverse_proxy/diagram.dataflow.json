@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Forward vs Reverse Proxy Data Flow",
+    "output": "high level design/02_networking_and_traffic/forward_vs_reverse_proxy/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Network"
+    },
+    {
+      "label": "Forward Proxy"
+    },
+    {
+      "label": "Reverse Proxy"
+    },
+    {
+      "label": "Origin Cluster"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "corp",
+      "type": "frontend",
+      "label": "Client Device",
+      "sublabel": "IP 10.0.1.5",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "fwd",
+      "type": "security",
+      "label": "Forward Proxy",
+      "sublabel": "Egress gateway",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "rev",
+      "type": "security",
+      "label": "Reverse Proxy",
+      "sublabel": "TLS termination",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "srv",
+      "type": "backend",
+      "label": "Origin Cluster",
+      "sublabel": "Private VPC",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "corp",
+      "to": "fwd",
+      "label": "egress"
+    },
+    {
+      "from": "fwd",
+      "to": "rev",
+      "label": "internet"
+    },
+    {
+      "from": "rev",
+      "to": "srv",
+      "label": "internal"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Proxy Interception",
+      "items": [
+        "Forward proxy shields client IP",
+        "Reverse proxy shields backend servers",
+        "Terminates TLS and buffers DDoS"
+      ]
+    }
+  ]
+}

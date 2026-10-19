@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Saga Pattern Orchestration & Compensating Actions Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Saga Orchestrator"
+    },
+    {
+      "label": "Step 1: Payment"
+    },
+    {
+      "label": "Step 2: Inventory"
+    },
+    {
+      "label": "Compensate on Error"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "orch",
+      "type": "frontend",
+      "label": "Orchestrator",
+      "sublabel": "State machine workflow",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "pay",
+      "type": "backend",
+      "label": "Payment Service",
+      "sublabel": "Charge $100",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "inv",
+      "type": "backend",
+      "label": "Inventory Service",
+      "sublabel": "Out of Stock (Fail)",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "comp",
+      "type": "security",
+      "label": "Refund Handler",
+      "sublabel": "Compensate payment",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "orch",
+      "to": "pay",
+      "label": "step 1"
+    },
+    {
+      "from": "pay",
+      "to": "inv",
+      "label": "step 2"
+    },
+    {
+      "from": "inv",
+      "to": "comp",
+      "label": "trigger refund"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Non-Blocking Microservices",
+      "items": [
+        "Eliminates database-level lock holding",
+        "Orchestrated via Temporal, AWS Step Functions, or Kafka events",
+        "Idempotent compensations safeguard against network retries"
+      ]
+    }
+  ]
+}

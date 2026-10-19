@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "In-Memory Key-Value Store Data Flow",
+    "output": "low level design/09_classic_machine_coding/in_memory_redis/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Commands"
+    },
+    {
+      "label": "Lock & TTL Check"
+    },
+    {
+      "label": "Store & TX Queue"
+    },
+    {
+      "label": "Return / Exec"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Redis Client",
+      "sublabel": "SET / GET / MULTI",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "lock",
+      "type": "security",
+      "label": "Thread RLock",
+      "sublabel": "Thread-safe sync",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "store",
+      "type": "database",
+      "label": "Key-Value Store",
+      "sublabel": "Passive TTL Evict",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "tx",
+      "type": "backend",
+      "label": "MULTI Queue",
+      "sublabel": "Thread-local queue",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "resp",
+      "type": "frontend",
+      "label": "Response Engine",
+      "sublabel": "OK / Value / [Results]",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "lock",
+      "label": "dispatch"
+    },
+    {
+      "from": "lock",
+      "to": "store",
+      "label": "direct op"
+    },
+    {
+      "from": "lock",
+      "to": "tx",
+      "label": "queue op"
+    },
+    {
+      "from": "store",
+      "to": "resp",
+      "label": "return"
+    },
+    {
+      "from": "tx",
+      "to": "resp",
+      "label": "exec batch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Fast Key-Value Storage",
+      "items": [
+        "Passive TTL eviction on read access",
+        "Atomic MULTI/EXEC transaction batching",
+        "Thread-safe synchronization with RLock"
+      ]
+    }
+  ]
+}

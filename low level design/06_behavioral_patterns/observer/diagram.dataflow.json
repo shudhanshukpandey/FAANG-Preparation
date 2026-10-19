@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Pub-Sub Market Ticker Observer Data Flow",
+    "output": "low level design/06_behavioral_patterns/observer/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Price Source"
+    },
+    {
+      "label": "Subject Ticker"
+    },
+    {
+      "label": "Dispatch Fan-Out"
+    },
+    {
+      "label": "Subscribers"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "src",
+      "type": "external",
+      "label": "NASDAQ Feed",
+      "sublabel": "AAPL price shift",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "subj",
+      "type": "backend",
+      "label": "Market Ticker",
+      "sublabel": "Subject",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "fanout",
+      "type": "messagebus",
+      "label": "Fanout Routing",
+      "sublabel": "_notify() loop",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "Mobile Alert",
+      "sublabel": "Push alert",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "bot",
+      "type": "backend",
+      "label": "Trading Bot",
+      "sublabel": "Auto-buy",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "src",
+      "to": "subj",
+      "label": "set_price()"
+    },
+    {
+      "from": "subj",
+      "to": "fanout",
+      "label": "notify"
+    },
+    {
+      "from": "fanout",
+      "to": "app",
+      "label": "update"
+    },
+    {
+      "from": "fanout",
+      "to": "bot",
+      "label": "update"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Loose 1-to-Many Binding",
+      "items": [
+        "Subject has zero knowledge of concrete subscribers",
+        "Observers subscribe or unsubscribe dynamically",
+        "Foundation for WebSockets and reactive event hubs"
+      ]
+    }
+  ]
+}

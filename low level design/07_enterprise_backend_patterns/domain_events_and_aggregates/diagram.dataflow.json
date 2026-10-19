@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "DDD Aggregate Root & Domain Events Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/domain_events_and_aggregates/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Command"
+    },
+    {
+      "label": "Aggregate Root"
+    },
+    {
+      "label": "Domain Event"
+    },
+    {
+      "label": "Event Handlers"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "client",
+      "type": "frontend",
+      "label": "Web Controller",
+      "sublabel": "place_order()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "agg",
+      "type": "backend",
+      "label": "OrderAggregate",
+      "sublabel": "Root Invariant Guard",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "event",
+      "type": "messagebus",
+      "label": "OrderPlacedEvent",
+      "sublabel": "Recorded in Aggregate",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "email",
+      "type": "external",
+      "label": "EmailHandler",
+      "sublabel": "Send Confirmation",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "inv",
+      "type": "database",
+      "label": "InventoryHandler",
+      "sublabel": "Reserve Stock",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "client",
+      "to": "agg",
+      "label": "execute"
+    },
+    {
+      "from": "agg",
+      "to": "event",
+      "label": "record event"
+    },
+    {
+      "from": "event",
+      "to": "email",
+      "label": "notify"
+    },
+    {
+      "from": "event",
+      "to": "inv",
+      "label": "reserve"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Tactical DDD Consistency",
+      "items": [
+        "Aggregate Root strictly shields internal entities",
+        "Domain events record state changes atomically",
+        "Decouples side-effects from transaction boundary"
+      ]
+    }
+  ]
+}

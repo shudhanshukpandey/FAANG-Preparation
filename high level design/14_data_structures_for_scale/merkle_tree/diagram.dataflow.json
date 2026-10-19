@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Merkle Tree Anti-Entropy & Consistency Verification Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Data Chunks"
+    },
+    {
+      "label": "Leaf Hashes"
+    },
+    {
+      "label": "Parent Nodes"
+    },
+    {
+      "label": "Root Hash"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "data",
+      "type": "frontend",
+      "label": "Replica Blocks",
+      "sublabel": "Chunks [A, B, C, D]",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "leaves",
+      "type": "backend",
+      "label": "Leaf Hashes",
+      "sublabel": "h(A), h(B), h(C), h(D)",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "parents",
+      "type": "security",
+      "label": "Branch Hashes",
+      "sublabel": "h(AB) & h(CD)",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "root",
+      "type": "database",
+      "label": "Merkle Root",
+      "sublabel": "h(ABCD)",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "data",
+      "to": "leaves",
+      "label": "sha256"
+    },
+    {
+      "from": "leaves",
+      "to": "parents",
+      "label": "hash pair"
+    },
+    {
+      "from": "parents",
+      "to": "root",
+      "label": "combine"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Efficient Replica Sync",
+      "items": [
+        "Only exchange root hash across nodes to verify consistency",
+        "Traverse mismatched tree branches to locate corrupted blocks",
+        "Foundational to Git, Cassandra anti-entropy, and DynamoDB replication"
+      ]
+    }
+  ]
+}

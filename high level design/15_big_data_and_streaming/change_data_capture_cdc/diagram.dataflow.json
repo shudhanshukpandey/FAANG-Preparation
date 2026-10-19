@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Change Data Capture (CDC) WAL Ingestion Data Flow",
+    "output": "diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "App Transaction"
+    },
+    {
+      "label": "DB & Outbox"
+    },
+    {
+      "label": "CDC Engine"
+    },
+    {
+      "label": "Kafka Topic"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "app",
+      "type": "frontend",
+      "label": "App Service",
+      "sublabel": "BEGIN ... COMMIT",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "PostgreSQL WAL",
+      "sublabel": "Outbox table",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "debezium",
+      "type": "backend",
+      "label": "Debezium Engine",
+      "sublabel": "Log replication reader",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "kafka",
+      "type": "messagebus",
+      "label": "Kafka Events",
+      "sublabel": "db.users.events",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "app",
+      "to": "db",
+      "label": "commit SQL"
+    },
+    {
+      "from": "db",
+      "to": "debezium",
+      "label": "tail WAL"
+    },
+    {
+      "from": "debezium",
+      "to": "kafka",
+      "label": "publish"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zero Dual-Write Race Conditions",
+      "items": [
+        "Eliminates dual-write bugs between DB and message broker",
+        "Decouples write path from cache invalidation and search indexing",
+        "Guarantees 100% data audit fidelity from database commit log"
+      ]
+    }
+  ]
+}

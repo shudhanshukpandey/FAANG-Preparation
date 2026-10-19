@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Repository Pattern Data Flow",
+    "output": "low level design/07_enterprise_backend_patterns/repository/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Service Layer"
+    },
+    {
+      "label": "Repository Interface"
+    },
+    {
+      "label": "Data Access Layer"
+    },
+    {
+      "label": "Persistence"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "svc",
+      "type": "frontend",
+      "label": "UserService",
+      "sublabel": "register_user()",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "iface",
+      "type": "backend",
+      "label": "UserRepository",
+      "sublabel": "Abstract Interface",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sql",
+      "type": "backend",
+      "label": "SQLAlchemy Repo",
+      "sublabel": "Production DB engine",
+      "stage": 2,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "mem",
+      "type": "backend",
+      "label": "InMemory Repo",
+      "sublabel": "Instant Pytest Mock",
+      "stage": 2,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "pg",
+      "type": "database",
+      "label": "PostgreSQL Cluster",
+      "sublabel": "SQL queries",
+      "stage": 3,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "ram",
+      "type": "database",
+      "label": "In-Memory Dict",
+      "sublabel": "Zero network latency",
+      "stage": 3,
+      "row": 2,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "svc",
+      "to": "iface",
+      "label": "add(user)"
+    },
+    {
+      "from": "iface",
+      "to": "sql",
+      "label": "inject prod"
+    },
+    {
+      "from": "iface",
+      "to": "mem",
+      "label": "inject test"
+    },
+    {
+      "from": "sql",
+      "to": "pg",
+      "label": "INSERT SQL"
+    },
+    {
+      "from": "mem",
+      "to": "ram",
+      "label": "store dict"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Persistence Decoupling",
+      "items": [
+        "Domain logic completely independent of SQL/ORM",
+        "Enables blazing-fast unit testing with in-memory mocks",
+        "Standard practice in FastAPI, Flask, and Django"
+      ]
+    }
+  ]
+}

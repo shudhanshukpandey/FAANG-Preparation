@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Paginated Database Cursor Iterator Data Flow",
+    "output": "low level design/06_behavioral_patterns/iterator/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Loop"
+    },
+    {
+      "label": "Iterator Engine"
+    },
+    {
+      "label": "Page Buffer"
+    },
+    {
+      "label": "Database Storage"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "loop",
+      "type": "frontend",
+      "label": "for item in cursor",
+      "sublabel": "Client loop",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "iter",
+      "type": "backend",
+      "label": "__next__()",
+      "sublabel": "Iterator Logic",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "buf",
+      "type": "backend",
+      "label": "In-Memory Buffer",
+      "sublabel": "Page of 4 records",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "SQL Table",
+      "sublabel": "Lazy fetch page",
+      "stage": 3,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "loop",
+      "to": "iter",
+      "label": "next"
+    },
+    {
+      "from": "iter",
+      "to": "buf",
+      "label": "pop"
+    },
+    {
+      "from": "buf",
+      "to": "db",
+      "label": "refill"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Memory-Safe Streaming",
+      "items": [
+        "Hides internal pagination from caller",
+        "Fetches records on-demand in chunks",
+        "Prevents Out-Of-Memory on million-row queries"
+      ]
+    }
+  ]
+}

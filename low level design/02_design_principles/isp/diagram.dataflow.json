@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "Interface Segregation Principle (ISP) Data Flow",
+    "output": "low level design/02_design_principles/isp/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Client Roles"
+    },
+    {
+      "label": "Segregated Interfaces"
+    },
+    {
+      "label": "Machine Concretion"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "doc_user",
+      "type": "frontend",
+      "label": "Document Worker",
+      "sublabel": "Only prints",
+      "stage": 0,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "fax_user",
+      "type": "frontend",
+      "label": "Office Clerk",
+      "sublabel": "Only faxes",
+      "stage": 0,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "i_print",
+      "type": "backend",
+      "label": "Printable Protocol",
+      "sublabel": "print(doc)",
+      "stage": 1,
+      "row": 0,
+      "width": 130
+    },
+    {
+      "id": "i_fax",
+      "type": "backend",
+      "label": "Faxable Protocol",
+      "sublabel": "fax(doc)",
+      "stage": 1,
+      "row": 2,
+      "width": 130
+    },
+    {
+      "id": "all_in_one",
+      "type": "external",
+      "label": "AllInOneMachine",
+      "sublabel": "Implements both cleanly",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "doc_user",
+      "to": "i_print",
+      "label": "uses printer"
+    },
+    {
+      "from": "fax_user",
+      "to": "i_fax",
+      "label": "uses fax"
+    },
+    {
+      "from": "i_print",
+      "to": "all_in_one",
+      "label": "fulfills"
+    },
+    {
+      "from": "i_fax",
+      "to": "all_in_one",
+      "label": "fulfills"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Clients Depend Only on What They Use",
+      "items": [
+        "Prevents monolithic fat interfaces that force dummy implementations",
+        "Clients are shielded from changes to methods they do not care about",
+        "Improves modularity and test mocking"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "You Aren't Gonna Need It (YAGNI) Lean Data Flow",
+    "output": "low level design/02_design_principles/yagni/diagram.html",
+    "viewBox": [
+      1080,
+      720
+    ],
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Current Need"
+    },
+    {
+      "label": "Lean Service"
+    },
+    {
+      "label": "Production Output"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "req",
+      "type": "frontend",
+      "label": "User Sign-In",
+      "sublabel": "Password auth only",
+      "stage": 0,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "svc",
+      "type": "backend",
+      "label": "SimpleAuthService",
+      "sublabel": "Implements current reqs",
+      "stage": 1,
+      "row": 1,
+      "width": 130
+    },
+    {
+      "id": "sess",
+      "type": "database",
+      "label": "User Session",
+      "sublabel": "Zero baggage",
+      "stage": 2,
+      "row": 1,
+      "width": 130
+    }
+  ],
+  "flows": [
+    {
+      "from": "req",
+      "to": "svc",
+      "label": "login()"
+    },
+    {
+      "from": "svc",
+      "to": "sess",
+      "label": "create session"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Zero Premature Architecture",
+      "items": [
+        "Do not write code for speculative future requirements",
+        "Avoid unneeded blockchain/biometric auth before product-market fit",
+        "Code not written has zero maintenance overhead"
+      ]
+    }
+  ]
+}
